@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Discount extends Model
 {
-    use SoftDeletes;
+    use  HasFactory, SoftDeletes;
 
     protected $table    = 'discounts';
     protected $fillable = ['discount_percent', 'discount_start', 'discount_end'];

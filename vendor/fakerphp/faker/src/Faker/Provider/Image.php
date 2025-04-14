@@ -10,7 +10,8 @@ class Image extends Base
     /**
      * @var string
      */
-    public const BASE_URL = 'https://via.placeholder.com';
+    // public const BASE_URL = 'https://via.placeholder.com';
+    public const BASE_URL = 'https://placehold.jp';
 
     public const FORMAT_JPG = 'jpg';
     public const FORMAT_JPEG = 'jpeg';
@@ -143,6 +144,8 @@ class Image extends Base
             $fp = fopen($filepath, 'w');
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $success = curl_exec($ch) && curl_getinfo($ch, CURLINFO_HTTP_CODE) === 200;
             fclose($fp);
             curl_close($ch);
