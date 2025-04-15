@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('user_id');
             $table->text('review_text');
-            $table->tinyInteger('rating');
+            $table->tinyInteger('rating')->unsigned();
             $table->timestamps();
             $table->softDeletes();
 

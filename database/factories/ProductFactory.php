@@ -19,11 +19,11 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->sentence(3),
+            'name'        => $this->faker->unique()->sentence(3),
             'description' => $this->faker->paragraph(), 
-            'brand_id' => Brand::get()->random()->id, 
+            'brand_id'    => Brand::get()->random()->id, 
             'category_id' => Category::get()->random()->id, 
-            'rating' => null,
+            'rating'      => null,
         ];
     }
 }

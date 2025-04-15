@@ -22,8 +22,9 @@ class GalleryFactory extends Factory
         
         $imageText = $this->faker->word();
 
-        for ($i = 0; $i < $this->faker->randomDigitNotNull(); $i++) {
-            $gallery[] = $this->faker->image('public/images', 640, 480, $imageText . ' ' . $this->faker->word());
+        for ($i = 0; $i < rand(1,3); $i++) {
+            $imagePath = $this->faker->image(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
+            $gallery[] = $imagePath;
         };
         
         return json_encode($gallery);

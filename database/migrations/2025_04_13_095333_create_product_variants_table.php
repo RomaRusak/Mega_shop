@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('gallery_id');
             $table->string('size', 50);
             $table->string('color', 50);
-            $table->tinyInteger('quantity');
+            $table->tinyInteger('quantity')->unsigned();
             $table->decimal('price', 7, 2);
             $table->timestamps();
             $table->softDeletes();

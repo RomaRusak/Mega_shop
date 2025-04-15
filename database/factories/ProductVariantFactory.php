@@ -22,10 +22,10 @@ class ProductVariantFactory extends Factory
         return [
             'product_id' => Product::get()->random()->id,  
             'gallery_id' => Gallery::get()->random()->id, 
-            'size' => $this->faker->randomElement(['s_size', 'm_size', 'l_size', 'xl_size']), 
-            'color' => $this->faker->randomElement(['red', 'green', 'blue']), 
-            'quantity' => $this->faker->randomNumber(2, true), 
-            'price' => $this->faker->randomFloat(2, 10, 300),
+            'size'       => $this->faker->randomElement(['s_size', 'm_size', 'l_size', 'xl_size']), 
+            'color'      => $this->faker->randomElement(['red', 'green', 'blue']), 
+            'quantity'   => $this->faker->randomNumber(2, true), 
+            'price'      => $this->faker->randomFloat(2, 10, 300),
         ];
     }
 }

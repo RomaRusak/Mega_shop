@@ -19,7 +19,7 @@ class DiscountProductVariantFactory extends Factory
     public function definition(): array
     {
         return [
-            'discount_id' => Discount::get()->random()->id, 
+            'discount_id'        => Discount::get()->random()->id, 
             'product_variant_id' => ProductVariant::get()->random()->id,
         ];
     }

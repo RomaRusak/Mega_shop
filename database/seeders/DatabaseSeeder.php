@@ -10,7 +10,12 @@ use App\Models\Gallery;
 use App\Models\ProductVariant;
 use App\Models\Discount;
 use App\Models\DiscountProductVariant;
-
+use App\Models\UserApi;
+use App\Models\Cart;
+use App\Models\Review;
+use App\Models\Address;
+use App\Models\Order;
+use Illuminate\Database\Eloquent\Model;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use Illuminate\Database\Seeder;
@@ -24,6 +29,26 @@ class DatabaseSeeder extends Seeder
     private $productVariantModel         = null;
     private $discountModel               = null;
     private $discountProductVariantModel = null;
+    private $userModel                   = null;
+    private $userApiModel                = null;
+    private $cartModel                   = null;
+    private $reviewModel                 = null;
+    private $addressModel                = null;
+    private $orderModel                  = null;
+
+    private $factoryParams = [
+        'brand'                  => 10,
+        'category'               => 3,
+        'product'                => 10,
+        'gallery'                => 5,
+        'productVariant'         => 50,
+        'discount'               => 4,
+        'discountProductVariant' => 5,
+        'user'                   => 12,
+        'review'                 => 20,
+        'address'                => 14,
+        'order'                  => 10,
+    ];
 
     public function __construct(
         Brand                  $brandModel, 
@@ -32,7 +57,13 @@ class DatabaseSeeder extends Seeder
         Gallery                $galleryModel,
         ProductVariant         $productVariant,
         Discount               $discountModel,
-        DiscountProductVariant $discountProductVariant
+        DiscountProductVariant $discountProductVariant,
+        User                   $user,
+        UserApi                $userApi,
+        Cart                   $cart,
+        Review                 $review,
+        Address                $address,
+        Order                  $order,
         )
     {
         $this->brandModel                  = $brandModel;
@@ -42,6 +73,12 @@ class DatabaseSeeder extends Seeder
         $this->productVariantModel         = $productVariant;
         $this->discountModel               = $discountModel;
         $this->discountProductVariantModel = $discountProductVariant;
+        $this->userModel                   = $user;
+        $this->userApiModel                = $userApi;
+        $this->cartModel                   = $cart;
+        $this->reviewModel                 = $review;
+        $this->addressModel                = $address;
+        $this->orderModel                  = $order;
     }
 
     /**
@@ -49,12 +86,67 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->brandModel::factory(10)->create();
-        $this->categoryModel::factory(3)->create();
-        $this->productModel::factory(10)->create();
-        $this->galleryModel::factory(5)->create();
-        $this->productVariantModel::factory(50)->create();
-        $this->discountModel::factory(4)->create();
-        $this->discountProductVariantModel::factory(5)->create();
+        $this->brandModel::factory($this->factoryParams['brand'])->create();
+        $this->categoryModel::factory($this->factoryParams['category'])->create();
+        $this->productModel::factory($this->factoryParams['product'])->create();
+        $this->galleryModel::factory($this->factoryParams['gallery'])->create();
+        $this->productVariantModel::factory($this->factoryParams['productVariant'])->create();
+        $this->discountModel::factory($this->factoryParams['discount'])->create();
+        $this->discountProductVariantModel::factory($this->factoryParams['discountProductVariant'])->create();
+        $this->userModel::factory($this->factoryParams['user'])->create();
+
+        foreach($this->userModel::all() as $userData) {
+            $userApiFactory = $this->getFactoryWithUserId($this->userApiModel, $userData->id);
+            $cartFactory    = $this->getFactoryWithUserId($this->cartModel, $userData->id);
+
+            $userApiFactory->create();
+            $cartFactory->create();
+        };
+
+        $this->reviewModel::factory($this->factoryParams['review'])->create();
+
+        foreach ($this->productModel::all() as $productData) {
+            $productData->update(['rating' => $this->calcProductRating($productData)]);
+        }
+
+        $this->createAddresses();
+        $this->orderModel::factory($this->factoryParams['order'])->create();
+    }
+
+    private function createAddresses()
+    {
+        $userFactoriesCount    = $this->factoryParams['user'];
+        $addressFactoriesCount = $this->factoryParams['address'];
+        
+        $usedUserIds = $this->userModel::select('id')
+                                        ->limit($addressFactoriesCount)
+                                        ->pluck('id');
+
+        if ($addressFactoriesCount >= $userFactoriesCount) {
+            $idOfAdditAddres = $this->userModel::select('id')
+                                                ->limit($addressFactoriesCount - $userFactoriesCount) 
+                                                ->get()  
+                                                ->shuffle()
+                                                ->pluck('id');
+
+            $usedUserIds = [...$usedUserIds, ...$idOfAdditAddres];
+        }
+
+        foreach($usedUserIds as $id) {
+            $addressFactory = $this->getFactoryWithUserId($this->addressModel, $id);
+            $addressFactory->create();
+        }
+    }
+
+    private function getFactoryWithUserId(Model $model, int $userId)
+    {
+        return $model::factory()->state([
+            'user_id' => $userId,
+        ]);
+    }
+
+    private function calcProductRating($product)
+    {
+        return $product->reviews()->avg('rating');
     }
 }

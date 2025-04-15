@@ -17,7 +17,7 @@ class DiscountFactory extends Factory
     public function definition(): array
     {
         return [
-            "discount_percent" => 5,
+            "discount_percent" => rand(1, 50),
             "discount_start"   => now()->format('Y-m-d'),
             "discount_end"     => now()->addDay($this->faker->randomDigitNotNull())->format('Y-m-d'),
         ];
