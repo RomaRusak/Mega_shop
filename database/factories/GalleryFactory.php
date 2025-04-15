@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Http\Helpers\ImageHepler;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Gallery>
@@ -23,7 +24,7 @@ class GalleryFactory extends Factory
         $imageText = $this->faker->word();
 
         for ($i = 0; $i < rand(1,3); $i++) {
-            $imagePath = $this->faker->image(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
+            $imagePath = ImageHepler::createImage(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
             $gallery[] = $imagePath;
         };
         
