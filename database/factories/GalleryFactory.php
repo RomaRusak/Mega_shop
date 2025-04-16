@@ -23,10 +23,13 @@ class GalleryFactory extends Factory
         
         $imageText = $this->faker->word();
 
-        for ($i = 0; $i < rand(1,3); $i++) {
-            $imagePath = ImageHepler::createImage(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
-            $gallery[] = $imagePath;
+        for ($i = 0; $i < rand(1,4); $i++) {
+            $imageData = ['image' => null, 'isMainImage' => false];
+            $imageData['image'] = ImageHepler::createImage(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
+            $gallery[] = $imageData;
         };
+
+        $gallery[0]['isMainImage'] = true;
         
         return json_encode($gallery);
     }
