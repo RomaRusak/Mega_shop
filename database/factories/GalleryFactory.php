@@ -31,6 +31,7 @@ class GalleryFactory extends Factory
         return json_encode($gallery);
     }
 
+    
     public function definition(): array
     {
         return [
