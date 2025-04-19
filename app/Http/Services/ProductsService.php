@@ -13,7 +13,7 @@ class ProductsService {
         $this->productVariantModel = $productVariant;
     }
 
-    public function getFiltProductVariantsResponcse(array $preparedRequestParams)
+    public function getFiltProductVariantsResponcse(array $preparedRequestParams): array
     {
         $page              = $preparedRequestParams['page'];
         $productsPerPage   = $preparedRequestParams['products_per_page'];

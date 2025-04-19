@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Http\Helpers\GeneralHelper;
+use Illuminate\Support\Facades\DB;
 
 class ProductVariant extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table    = 'product_variants';
-    protected $fillable = ['product_id', 'gallery_id', 'size', 'color', 'quantity', 'price'];
+    protected $table       = 'product_variants';
+    protected $fillable    = ['product_id', 'gallery_id', 'size', 'color', 'quantity', 'price'];
 
     public function product(): BelongsTo
     {
@@ -33,12 +35,15 @@ class ProductVariant extends Model
 
     public function getFilProductVariantsQuery(array $preparedRequestParams): Builder
     {
-        $brand             = $preparedRequestParams['brand'];
-        $color             = $preparedRequestParams['color'];
-        $size              = $preparedRequestParams['size'];
-        $minPrice          = $preparedRequestParams['min_price'];
-        $maxPrice          = $preparedRequestParams['max_price'];
-        $category          = $preparedRequestParams['category'];
+        $transformedBrand    = array_map(function($brand) {
+            return strtolower(GeneralHelper::underscoresToSpace($brand));
+        }, $preparedRequestParams['brand']);
+        
+        $color               = $preparedRequestParams['color'];
+        $size                = $preparedRequestParams['size'];
+        $minPrice            = $preparedRequestParams['min_price'];
+        $maxPrice            = $preparedRequestParams['max_price'];
+        $transformedcategory = strtolower(GeneralHelper::underscoresToSpace($preparedRequestParams['category']));
 
         $query = $this::select('id', 'size', 'color', 'product_id', 'gallery_id')->with([
             'product' => function ($query) {
@@ -64,16 +69,16 @@ class ProductVariant extends Model
             },
         ]);
 
-        if (!empty($category)) {
-            $query->whereHas('product.category', function ($query) use ($category) {
-                $query->where('name', $category);
+        if (!empty($transformedcategory)) {
+            $query->whereHas('product.category', function ($query) use ($transformedcategory) {
+                $query->where(DB::raw('LOWER(name)'), [$transformedcategory]);
             });
         }
 
-        if (!empty($brand)) {
-            $query->whereHas('product.brand', function ($query) use ($brand) {
-                $query->whereIn('name', $brand);
-            });; 
+        if (!empty($transformedBrand)) {
+            $query->whereHas('product.brand', function ($query) use ($transformedBrand) {
+                $query->whereIn(DB::raw('LOWER(name)'), $transformedBrand);
+            });
         }
 
         if (!empty($color)) {

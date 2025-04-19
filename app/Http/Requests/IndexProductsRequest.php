@@ -11,42 +11,42 @@ class IndexProductsRequest extends FormRequest
     private $requestData = [
         'color'              => [
             'defaultValue' => [],
-            'requestRules' => ['nullable', 'string_or_array'],
+            'rules'        => ['nullable', 'string_or_array'],
             'requiredType' => 'array',
         ],
         'size'               => [
             'defaultValue' => [],
-            'requestRules' => ['nullable', 'string_or_array'],
+            'rules'        => ['nullable', 'string_or_array'],
             'requiredType' => 'array',
         ],
         'min_price'          => [
             'defaultValue' => null,
-            'requestRules' => ['nullable', 'numeric'],
+            'rules'        => ['nullable', 'numeric'],
             'requiredType' => 'float',
         ],
         'max_price'          => [
             'defaultValue' => null,
-            'requestRules' => ['nullable', 'numeric'],
+            'rules'        => ['nullable', 'numeric'],
             'requiredType' => 'float',
         ],
         'page'               => [
             'defaultValue' => 1,
-            'requestRules' => ['nullable', 'numeric'],
+            'rules'        => ['nullable', 'numeric'],
             'requiredType' => 'integer',
         ],
         'products_per_page'  => [
             'defaultValue' => 20,
-            'requestRules' => ['nullable', 'numeric'],
+            'rules'        => ['nullable', 'numeric'],
             'requiredType' => 'integer',
         ],
         'brand'              => [
             'defaultValue' => [],
-            'requestRules' => ['nullable', 'string_or_array'],
+            'rules'        => ['nullable', 'string_or_array'],
             'requiredType' => 'array',
         ],
         'category'           => [
             'defaultValue' => null,
-            'requestRules' => ['nullable', 'string'],
+            'rules'        => ['nullable', 'string'],
             'requiredType' => 'string',
         ],
     ];
@@ -69,7 +69,7 @@ class IndexProductsRequest extends FormRequest
         $rules = [];
 
         foreach($this->requestData as $paramName => $paramData) {
-            $rules[$paramName] = implode('|', $paramData['requestRules']);
+            $rules[$paramName] = implode('|', $paramData['rules']);
         }
 
         return $rules;

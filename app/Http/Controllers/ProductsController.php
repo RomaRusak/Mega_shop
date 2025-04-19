@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductVariant;
 use App\Http\Requests\IndexProductsRequest;
-use Illuminate\Database\Eloquent\Builder;
 use App\Http\Services\ProductsService;
 
 class ProductsController extends Controller
