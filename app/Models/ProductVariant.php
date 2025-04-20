@@ -71,7 +71,7 @@ class ProductVariant extends Model
 
         if (!empty($transformedcategory)) {
             $query->whereHas('product.category', function ($query) use ($transformedcategory) {
-                $query->where(DB::raw('LOWER(name)'), [$transformedcategory]);
+                $query->where(DB::raw('LOWER(name)'), $transformedcategory);
             });
         }
 

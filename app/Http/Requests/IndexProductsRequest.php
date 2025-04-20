@@ -35,7 +35,7 @@ class IndexProductsRequest extends FormRequest
             'requiredType' => 'integer',
         ],
         'products_per_page'  => [
-            'defaultValue' => 20,
+            'defaultValue' => 5,
             'rules'        => ['nullable', 'numeric'],
             'requiredType' => 'integer',
         ],

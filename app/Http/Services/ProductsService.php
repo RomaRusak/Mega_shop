@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Http\Services;
-use App\Models\ProductVariant;
+use App\Models\Product;
 
 class ProductsService {
-    private $productVariantModel = null;
+    private $productModel        = null;
 
     public function __construct(
-        ProductVariant  $productVariant,
+        Product $productModel,
         )
     {
-        $this->productVariantModel = $productVariant;
+        $this->productModel        = $productModel;
     }
 
-    public function getFiltProductVariantsResponcse(array $preparedRequestParams): array
+    public function getFiltProductsResponcse(array $preparedRequestParams): array
     {
         $page              = $preparedRequestParams['page'];
         $productsPerPage   = $preparedRequestParams['products_per_page'];
@@ -27,23 +27,23 @@ class ProductsService {
             'products'              => [],
         ];
 
-        $getfiltProdVariantsQuery   = $this->productVariantModel->getFilProductVariantsQuery($preparedRequestParams);
-        $totalFiltProductVariants   = $getfiltProdVariantsQuery->count();
+        $getFiltProductsQuery = $this->productModel->getFilProductsQuery($preparedRequestParams);
+        $totalFiltProduct     = $getFiltProductsQuery->count();
         
-        $getfiltProdVariantsQuery->forPage($page, $productsPerPage);
+        $getFiltProductsQuery->forPage($page, $productsPerPage);
         
-        $filtProductVariants         = $getfiltProdVariantsQuery->get()->toArray();
-        $totalShowedFiltProdVariants = count($filtProductVariants);
+        $filtProducts            = $getFiltProductsQuery->get()->toArray();
+        $totalShowedFiltProducts = count($filtProducts);
 
-        $responseData['total_products']        = $totalFiltProductVariants;
-        $responseData['total_showed_products'] = $totalShowedFiltProdVariants;
+        $responseData['total_products']        = $totalFiltProduct;
+        $responseData['total_showed_products'] = $totalShowedFiltProducts;
         
         $totalPages = $productsPerPage > 0 
-                                    ? ((int) ceil($totalFiltProductVariants / $productsPerPage)) 
+                                    ? ((int) ceil($totalFiltProduct / $productsPerPage)) 
                                     : 0;
 
         $responseData['total_pages']  = $totalPages;
-        $responseData['products']     = $filtProductVariants;
+        $responseData['products']     = $filtProducts;
 
         return $responseData;
     }
