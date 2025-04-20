@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\ValidationException;
 
 class IndexProductsRequest extends FormRequest
 {
@@ -71,8 +73,16 @@ class IndexProductsRequest extends FormRequest
         foreach($this->requestData as $paramName => $paramData) {
             $rules[$paramName] = implode('|', $paramData['rules']);
         }
-
+        
         return $rules;
+    }
+
+    protected function failedValidation(Validator $validator) {
+        $errors = $validator->errors();
+
+        throw new ValidationException($validator, response()->json([
+            'errors'  => $errors->toArray(),
+        ], 422));
     }
 
     private function convertToReqType(mixed $value, string $requiredType)
@@ -116,5 +126,4 @@ class IndexProductsRequest extends FormRequest
 
         $this->merge($transfomedRequestParams);
     }
-
 }

@@ -125,11 +125,10 @@ class Product extends Model
         ]);
     }
 
-    public function getProductById(string $id): Collection
+    public function getProductById(string $id): Product
     {
         return $this->withProductRelations(
             $this::select('id', 'name', 'brand_id', 'category_id', 'rating')
-            ->where('id', $id)
-        )->get();
+        )->find($id);   
     }
 }

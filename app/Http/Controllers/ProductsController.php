@@ -2,73 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductVariant;
 use App\Http\Requests\IndexProductsRequest;
 use App\Http\Services\ProductsService;
-use App\Models\Brand;
-use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\Product;
+use App\Http\Helpers\GeneralHelper;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {   
     private $productsService     = null;
-    private $productVariantModel = null;
-    private $brandModel          = null;
-    private $categoryModel       = null;
     private $productModel        = null;
+    private $generalHelper       = null;
 
     public function __construct(
-        ProductVariant  $productVariant,
         ProductsService $productsService,
-        Brand           $brand,
-        Category        $category,
         Product         $product,
+        GeneralHelper   $generalHelper,
         )
     {
-        $this->productVariantModel = $productVariant;
-        $this->productsService     = $productsService;
-        $this->brandModel          = $brand;
-        $this->categoryModel       = $category;
-        $this->productModel        = $product;
+        $this->productsService = $productsService;
+        $this->productModel    = $product;
+        $this->generalHelper   = $generalHelper;
     }
 
     public function index(IndexProductsRequest $request): JsonResponse
     {
         $filtProducts= $this->productsService->getFiltProductsResponcse($request->all());
 
-        //метод getUniqValuesArr расширяет базовую модель
-        $uniqBrandNames           = ['uniq_brands' => $this->brandModel->getUniqValuesArr('name')];
-        $uniqCategoryNames        = ['uniq_categories' => $this->categoryModel->getUniqValuesArr('name')];
-        $uniqProductVariantColors = ['uniq_colors' => $this->productVariantModel->getUniqValuesArr('color')];
-        $uniqProductVariantSizes  = ['uniq_sizes' => $this->productVariantModel->getUniqValuesArr('size')];
-        $minProductVariantPrice   = ['min_product_price' => $this->productVariantModel->min('price')];
-        $maxProductVariantPrice   = ['max_product_price' => $this->productVariantModel->max('price')];
-
-        return response()->json([
-            ...$filtProducts,
-            ...$uniqBrandNames,
-            ...$uniqCategoryNames,
-            ...$uniqProductVariantColors,
-            ...$uniqProductVariantSizes,
-            ...$minProductVariantPrice,
-            ...$maxProductVariantPrice
-        ]);
+        return response()->json($filtProducts);
     }
 
     public function show(Request $request)
     {
-        $id = $request->id;
-        $validator = Validator::make(
-            ['id' => $id], 
-            ['id' => 'required|string|exists:products,id']
-        );
+        $id       = $request->id;
+        $category = $request->category;
+
+        $validatorData = ['id' => $id];
+        $validatorRules = ['id' => 'required|numeric|exists:products,id'];
+
+        if (isset($category)) {
+            $transformedCategory = $this->generalHelper->underscoresToSpace($category);
+            
+            $validatorData['category'] = $transformedCategory;
+            $validatorRules['category'] = [
+                'string',
+                Rule::exists('categories', 'name')->where(function (Builder $query) use ($transformedCategory, $id) {
+                    $query->where(DB::raw('LOWER(name)'), $transformedCategory);
+                }),
+            ];
+        }
+
+        $validator = Validator::make($validatorData, $validatorRules);
 
         if ($validator->fails()) {
-            return redirect()->route('products.index') 
-                             ->withErrors($validator);             
+            return response()->json([
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $currentProductData = $this->productModel->getProductById($id);

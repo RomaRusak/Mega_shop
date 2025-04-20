@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\FiltersController;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,3 +23,6 @@ Route::prefix('products')->group(function () {
         ->where('id', '[0-9]+')
         ->name('products.show');
 });
+
+Route::post('/filters', [FiltersController::class, 'index'])->name('filters.index');
+    //    ->withoutMiddleware(VerifyCsrfToken::class);
