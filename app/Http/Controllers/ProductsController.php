@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexProductsRequest;
 use App\Http\Services\ProductsService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\Product;
 use App\Http\Helpers\GeneralHelper;

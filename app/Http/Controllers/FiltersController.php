@@ -10,30 +10,19 @@ use App\Models\ProductVariant;
 class FiltersController extends Controller
 {
 
-    private $brandModel          = null;
-    private $categoryModel       = null;
-    private $productVariantModel = null;
-
-    public function __construct(
-        Brand          $brand,
-        Category       $category,
-        ProductVariant $productVariant,
-    )
-    {
-        $this->brandModel          = $brand;
-        $this->categoryModel       = $category;
-        $this->productVariantModel = $productVariant;
-    }
-
-    public function index()
+    public function index(
+        Brand          $brandModel, 
+        Category       $categoryModel, 
+        ProductVariant $productVariantModel
+        )
     {
         //метод getUniqValuesArr расширяет базовую модель
-        $uniqBrandNames           = ['uniq_brands' => $this->brandModel->getUniqValuesArr('name')];
-        $uniqCategoryNames        = ['uniq_categories' => $this->categoryModel->getUniqValuesArr('name')];
-        $uniqProductVariantColors = ['uniq_colors' => $this->productVariantModel->getUniqValuesArr('color')];
-        $uniqProductVariantSizes  = ['uniq_sizes' => $this->productVariantModel->getUniqValuesArr('size')];
-        $minProductVariantPrice   = ['min_product_price' => $this->productVariantModel->min('price')];
-        $maxProductVariantPrice   = ['max_product_price' => $this->productVariantModel->max('price')];
+        $uniqBrandNames           = ['uniq_brands'       => $brandModel->getUniqValuesArr('name')];
+        $uniqCategoryNames        = ['uniq_categories'   => $categoryModel->getUniqValuesArr('name')];
+        $uniqProductVariantColors = ['uniq_colors'       => $productVariantModel->getUniqValuesArr('color')];
+        $uniqProductVariantSizes  = ['uniq_sizes'        => $productVariantModel->getUniqValuesArr('size')];
+        $minProductVariantPrice   = ['min_product_price' => $productVariantModel->min('price')];
+        $maxProductVariantPrice   = ['max_product_price' => $productVariantModel->max('price')];
 
         return response()->json([
             ...$uniqBrandNames,
