@@ -6,18 +6,17 @@ use App\Http\Controllers\FiltersController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 
 Route::prefix('api/products')->group(function () {
-    Route::get('{category?}', [ProductsController::class, 'index'])
-        ->where('category', '[a-zA-Z\-_\']+')
+    //если заканчивается на -\d+ то передан slug, а не категория
+    Route::get('{productSlug}', [ProductsController::class, 'show'])
+        ->where('productSlug', '^[a-zA-Z0-9-_]+-\d+$') 
+        ->name('products.show');
+
+    Route::get('{categorySlug?}', [ProductsController::class, 'index'])
         ->name('products.index');
 
-    Route::get('{category?}/{id}', [ProductsController::class, 'show'])
-        ->where('category', '[a-zA-Z\-_\']+')
-        ->where('id', '[0-9]+')
+    Route::get('{categorySlug}/{productSlug}', [ProductsController::class, 'show'])
         ->name('products.show');
 
-    Route::get('{id}', [ProductsController::class, 'show'])
-        ->where('id', '[0-9]+')
-        ->name('products.show');
 });
 
 Route::post('/filters', [FiltersController::class, 'index'])->name('filters.index');

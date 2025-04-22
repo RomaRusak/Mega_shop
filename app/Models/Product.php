@@ -17,7 +17,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $table    = 'products';
-    protected $fillable = ['name', 'description', 'brand_id', 'category_id', 'rating'];
+    protected $fillable = ['name', 'slug', 'description', 'brand_id', 'category_id', 'rating'];
 
     public function category(): BelongsTo
     {
@@ -49,15 +49,15 @@ class Product extends Model
         $size                = $preparedRequestParams['size'];
         $minPrice            = $preparedRequestParams['min_price'];
         $maxPrice            = $preparedRequestParams['max_price'];
-        $transformedcategory = strtolower(GeneralHelper::underscoresToSpace($preparedRequestParams['category']));
+        $categorySlug        = $preparedRequestParams['categorySlug'];
 
         $query = $this->withProductRelations(
             $this::select('id', 'name', 'brand_id', 'category_id', 'rating')
         );
 
-        if (!empty($transformedcategory)) {
-            $query->whereHas('category', function ($query) use ($transformedcategory) {
-                $query->where(DB::raw('LOWER(name)'), $transformedcategory);
+        if (!empty($categorySlug)) {
+            $query->whereHas('category', function ($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug);
             });
         }
 
@@ -114,7 +114,7 @@ class Product extends Model
             },
 
             'category' => function ($query) {
-                $query->select('id', 'name');
+                $query->select('id', 'name', 'slug');
             },
 
             'productVariants.discounts' => function($query) {

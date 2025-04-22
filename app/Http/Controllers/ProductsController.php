@@ -12,6 +12,7 @@ use App\Http\Helpers\GeneralHelper;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ShowProductsRequest;
 
 class ProductsController extends Controller
 {   
@@ -37,35 +38,12 @@ class ProductsController extends Controller
         return response()->json($filtProducts);
     }
 
-    public function show(Request $request)
+    public function show(ShowProductsRequest $request): JsonResponse
     {
-        $id       = $request->id;
-        $category = $request->category;
 
-        $validatorData = ['id' => $id];
-        $validatorRules = ['id' => 'required|numeric|exists:products,id'];
+        $productId = $this->generalHelper::getIdFromSlug($request->productSlug);
 
-        if (isset($category)) {
-            $transformedCategory = $this->generalHelper->underscoresToSpace($category);
-            
-            $validatorData['category'] = $transformedCategory;
-            $validatorRules['category'] = [
-                'string',
-                Rule::exists('categories', 'name')->where(function (Builder $query) use ($transformedCategory, $id) {
-                    $query->where(DB::raw('LOWER(name)'), $transformedCategory);
-                }),
-            ];
-        }
-
-        $validator = Validator::make($validatorData, $validatorRules);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $currentProductData = $this->productModel->getProductById($id);
+        $currentProductData = $this->productModel->getProductById($productId);
 
         return response()->json($currentProductData);
     }

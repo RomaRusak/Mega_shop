@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Symfony\Component\HttpFoundation\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
@@ -46,9 +44,9 @@ class IndexProductsRequest extends FormRequest
             'rules'        => ['nullable', 'string_or_array'],
             'requiredType' => 'array',
         ],
-        'category'           => [
+        'categorySlug'       => [
             'defaultValue' => null,
-            'rules'        => ['nullable', 'string'],
+            'rules'        => ['nullable', 'string', 'exists:categories,slug'],
             'requiredType' => 'string',
         ],
     ];
@@ -66,10 +64,26 @@ class IndexProductsRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+     protected function prepareForValidation(): void
+     {
+        $basePaths   = 'api/products/';
+        [
+            'requestPath'      => $requestPath,
+            'basePathPosition' => $basePathPosition,
+        ] = $this->getRequestPathData('api/products/');
+
+        $categorySlug     = substr($requestPath, $basePathPosition + strlen($basePaths));
+        
+        if (strlen($categorySlug)) {
+            $this->merge([
+                'categorySlug' => $categorySlug,
+            ]);
+        }
+     }
+
     public function rules(): array
     {
-        $rules = [];
-
         foreach($this->requestData as $paramName => $paramData) {
             $rules[$paramName] = implode('|', $paramData['rules']);
         }
