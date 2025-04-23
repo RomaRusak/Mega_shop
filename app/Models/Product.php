@@ -39,7 +39,7 @@ class Product extends Model
         return $this->hasMany(Review::class);
     }
 
-    public function getFilProductsQuery(array $preparedRequestParams): Builder
+    public function getFilteredProducts(array $preparedRequestParams): Collection
     {
         $transformedBrand    = array_map(function($brand) {
             return strtolower(GeneralHelper::underscoresToSpace($brand));
@@ -95,7 +95,7 @@ class Product extends Model
             });
         }
 
-        return $query;
+        return $query->get();
     }
 
     private function withProductRelations(Builder $query): Builder

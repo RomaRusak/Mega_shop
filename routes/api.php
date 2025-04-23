@@ -19,5 +19,5 @@ Route::prefix('api/products')->group(function () {
 
 });
 
-Route::post('/filters', [FiltersController::class, 'index'])->name('filters.index');
-    //    ->withoutMiddleware(VerifyCsrfToken::class);
+Route::post('/api/filters', [FiltersController::class, 'index'])->name('filters.index')
+       ->withoutMiddleware(VerifyCsrfToken::class);

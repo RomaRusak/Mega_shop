@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Http\Helpers\GeneralHelper;
 use Illuminate\Support\Facades\DB;
+use App\Http\Traits\GetUniqValuesArr;
 
 class ProductVariant extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, GetUniqValuesArr;
 
     protected $table       = 'product_variants';
     protected $fillable    = ['product_id', 'gallery_id', 'size', 'color', 'quantity', 'price'];

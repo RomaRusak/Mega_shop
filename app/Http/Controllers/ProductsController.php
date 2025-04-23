@@ -3,47 +3,43 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexProductsRequest;
-use App\Http\Services\ProductsService;
-use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Models\Product;
 use App\Http\Helpers\GeneralHelper;
-use Illuminate\Validation\Rule;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ShowProductsRequest;
+use App\Http\Resources\ProductsListResource;
+use App\Http\Resources\ProductResource;
 
 class ProductsController extends Controller
 {   
-    private $productsService     = null;
     private $productModel        = null;
     private $generalHelper       = null;
 
     public function __construct(
-        ProductsService $productsService,
         Product         $product,
         GeneralHelper   $generalHelper,
         )
     {
-        $this->productsService = $productsService;
         $this->productModel    = $product;
         $this->generalHelper   = $generalHelper;
     }
 
-    public function index(IndexProductsRequest $request): JsonResponse
+    public function index(IndexProductsRequest $request): ProductsListResource
     {
-        $filtProducts= $this->productsService->getFiltProductsResponcse($request->all());
+        $filtetedProducts = $this->productModel->getFilteredProducts($request->all());
 
-        return response()->json($filtProducts);
+        return new ProductsListResource([
+            'page'                  => $request->page,
+            'products_per_page'     => $request->products_per_page,
+            'products'              => $filtetedProducts,
+        ]);
     }
 
-    public function show(ShowProductsRequest $request): JsonResponse
+    public function show(ShowProductsRequest $request): ProductResource
     {
 
         $productId = $this->generalHelper::getIdFromSlug($request->productSlug);
 
-        $currentProductData = $this->productModel->getProductById($productId);
-
-        return response()->json($currentProductData);
+        return new ProductResource($this->productModel->getProductById($productId));
     }
 }
