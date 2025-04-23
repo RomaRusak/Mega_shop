@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\ValidationException;
 
-class IndexProductsRequest extends FormRequest
+class ProductsIndexRequest extends FormRequest
 {
     private $requestData = [
         'color'              => [
@@ -44,11 +44,6 @@ class IndexProductsRequest extends FormRequest
             'rules'        => ['nullable', 'string_or_array'],
             'requiredType' => 'array',
         ],
-        'categorySlug'       => [
-            'defaultValue' => null,
-            'rules'        => ['nullable', 'string', 'exists:categories,slug'],
-            'requiredType' => 'string',
-        ],
     ];
 
     /**
@@ -64,23 +59,6 @@ class IndexProductsRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-
-     protected function prepareForValidation(): void
-     {
-        $basePaths   = 'api/products/';
-        [
-            'requestPath'      => $requestPath,
-            'basePathPosition' => $basePathPosition,
-        ] = $this->getRequestPathData('api/products/');
-
-        $categorySlug     = substr($requestPath, $basePathPosition + strlen($basePaths));
-        
-        if (strlen($categorySlug)) {
-            $this->merge([
-                'categorySlug' => $categorySlug,
-            ]);
-        }
-     }
 
     public function rules(): array
     {
