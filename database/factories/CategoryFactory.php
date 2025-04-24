@@ -16,8 +16,20 @@ class CategoryFactory extends Factory
      */
     public function definition(): array
     {
+        $name = $this->faker->unique()->randomElement([
+            "Men's Outerwear", 
+            "Men's Bottoms",
+            "Men's Footwear",
+            "Women's Outerwear",
+            "Women's Bottoms",
+            "Women's Footwear",
+        ]);
+        $slug = strtolower(str_replace(' ', '_', $name));
+        $slug = preg_replace('/[^a-zA-Z_]/', '', $slug);
+
         return [
-            'name' => $this->faker->unique()->title(),
+            'name' => $name,
+            'slug' => $slug,
         ];
     }
 }
