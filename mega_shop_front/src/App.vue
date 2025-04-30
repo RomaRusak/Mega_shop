@@ -1,26 +1,32 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <h1>{{JSON.stringify(getProducts)}}</h1>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import store from './store';
+import { mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  store,
+  data() {
+    return {
+      test: 'test',
+    }
+  },
+  computed: {
+    ...mapGetters(['getProducts']),
+  },
+  methods: {
+    ...mapActions(['asyncFetchProductsData']),
+  },
+  mounted() {
+    this.asyncFetchProductsData()
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>
