@@ -34,8 +34,7 @@ export default {
       },
       getters: {
         getProducts(state) {
-            console.log(state.productsData.products);
-            return state.productsData.products;
+          return state.productsData.products;
         }
       }
 };

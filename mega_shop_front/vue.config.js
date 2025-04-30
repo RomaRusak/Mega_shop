@@ -1,11 +1,18 @@
 const { defineConfig } = require('@vue/cli-service')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin'); // Импортируем для работы с CSS
+
 module.exports = defineConfig({
   transpileDependencies: true,
   chainWebpack: config => {
     config.optimization.splitChunks(false)
 
     config.output
-      .filename('bundle.js')
-      .chunkFilename('bundle.js');
+      .filename('app.js')
+      .chunkFilename('app.js');
+
+    config.plugin('extract-css')
+      .use(MiniCssExtractPlugin, [{
+        filename: 'styles.css',
+      }]);
   }
 })

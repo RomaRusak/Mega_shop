@@ -1,5 +1,7 @@
 <template>
-    <h1>{{JSON.stringify(getProducts)}}</h1>
+    <div>
+        {{ JSON.stringify(getProducts) }}
+    </div>
 </template>
 
 <script>
@@ -20,3 +22,9 @@ import { mapActions } from 'vuex';
         }
     }
 </script>
+
+<style scoped>
+    .gold {
+        background-color: gold;
+    }
+</style>
