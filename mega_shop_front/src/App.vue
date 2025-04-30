@@ -1,29 +1,13 @@
 <template>
-  <h1>{{JSON.stringify(getProducts)}}</h1>
+  <page-layout />
 </template>
 
 <script>
-import store from './store';
-import { mapGetters } from 'vuex';
-import { mapActions } from 'vuex';
+import PageLayout from './components/PageLayout.vue';
 
 export default {
   name: 'App',
-  store,
-  data() {
-    return {
-      test: 'test',
-    }
-  },
-  computed: {
-    ...mapGetters(['getProducts']),
-  },
-  methods: {
-    ...mapActions(['asyncFetchProductsData']),
-  },
-  mounted() {
-    this.asyncFetchProductsData()
-  }
+  components: {'page-layout': PageLayout},
 }
 </script>
 
