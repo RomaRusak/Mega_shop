@@ -18,10 +18,10 @@ class FiltersController extends Controller
         ): FiltersListResource
     {
         return new FiltersListResource([
-            'uniq_brands'       => $brandModel->getUniqValuesArr('name'),
-            'uniq_categories'   => $categoryModel->getUniqValuesArr('name'),
-            'uniq_colors'       => $productVariantModel->getUniqValuesArr('color'),
-            'uniq_sizes'        => $productVariantModel->getUniqValuesArr('size'),
+            'uniq_brands'       => $brandModel->select('name')->get()->toArray(),
+            'uniq_categories'   => $categoryModel->select('name', 'slug')->get()->toArray(),
+            'uniq_colors'       => $productVariantModel->distinct('color')->pluck('color'),
+            'uniq_sizes'        => $productVariantModel->distinct('size')->pluck('size'),
             'min_product_price' => $productVariantModel->min('price'),
             'max_product_price' => $productVariantModel->max('price')
         ]);
