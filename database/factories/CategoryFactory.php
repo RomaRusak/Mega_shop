@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Http\Helpers\SlugHelper;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Category>
@@ -24,8 +25,8 @@ class CategoryFactory extends Factory
             "Women's Bottoms",
             "Women's Footwear",
         ]);
-        $slug = strtolower(str_replace(' ', '_', $name));
-        $slug = preg_replace('/[^a-zA-Z_]/', '', $slug);
+        
+        $slug = SlugHelper::createSlug($name, '/[^a-zA-Z_]/');
 
         return [
             'name' => $name,

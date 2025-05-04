@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Http\Helpers\SlugHelper;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
@@ -21,8 +22,7 @@ class ProductFactory extends Factory
     {
 
         $name = $this->faker->unique()->sentence(3);
-        $slug = strtolower(str_replace(' ', '_', $name));
-        $slug = preg_replace('/[^a-zA-Z0-9-_]/', '', $slug);
+        $slug = SlugHelper::createSlug($name, '/[^a-zA-Z0-9-_]/');
 
         return [
             'name'        => $name,

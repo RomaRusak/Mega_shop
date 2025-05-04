@@ -18,7 +18,7 @@ class FiltersController extends Controller
         ): FiltersListResource
     {
         return new FiltersListResource([
-            'uniq_brands'       => $brandModel->select('name')->get()->toArray(),
+            'uniq_brands'       => $brandModel->select('name', 'slug')->get()->toArray(),
             'uniq_categories'   => $categoryModel->select('name', 'slug')->get()->toArray(),
             'uniq_colors'       => $productVariantModel->distinct('color')->pluck('color'),
             'uniq_sizes'        => $productVariantModel->distinct('size')->pluck('size'),

@@ -28,7 +28,7 @@ export default {
         ...mapActions(['asyncFetchProductsData']),
 
         updateURL(stateFilters) {
-            const selectedBrands = this.getSelectedFilters(stateFilters.brands, 'isChecked', 'name');
+            const selectedBrands = this.getSelectedFilters(stateFilters.brands, 'isChecked', 'slug');
             const selectedColors = this.getSelectedFilters(stateFilters.colors, 'isChecked', 'name');
             const selectedSizes  = this.getSelectedFilters(stateFilters.sizes, 'isChecked', 'name');
             const selectedMinPrice = String(stateFilters.selectedMinPrice);
