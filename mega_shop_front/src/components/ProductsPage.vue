@@ -1,28 +1,26 @@
 <template>
     <div class="products-wrapper">
-        <!-- {{ JSON.stringify(this.getProducts) }} -->
         <filter-sidebar />
+        {{ JSON.stringify(this.getProducts) }}
+        <products-url-params-updater />
     </div>
 </template>
 
 <script>
 import store from '@/store';
 import { mapGetters } from 'vuex';
-import { mapActions } from 'vuex';
 import FilterSidebar from './FilterSidebar.vue';
+import ProductsURLParamsUpdater from './ProductsURLParamsUpdater.vue';
 
     export default {
         store,
-        components: {'filter-sidebar': FilterSidebar},
+        components: {
+            'filter-sidebar': FilterSidebar,
+            'products-url-params-updater': ProductsURLParamsUpdater
+        },
         computed: {
             ...mapGetters(['getProducts']),
         },
-        methods: {
-            ...mapActions(['asyncFetchProductsData']),
-        },
-        mounted() {
-            this.asyncFetchProductsData()
-        }
     }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>Brands</p>
+        <p>{{title}}</p>
         <ul style="display: flex; flex-direction: column; gap: 5px;">
             <li
             v-for="filt in getFilters(filterKey)"
@@ -35,7 +35,12 @@ import { mapGetters, mapMutations } from 'vuex';
             filterKey: {
                 type: String,
                 required: true,
-            }
+            },
+
+            title: {
+                type: String,
+                default: '',
+            },
         },
         store,
         components: {'custom-checkbox': CustomCheckbox},

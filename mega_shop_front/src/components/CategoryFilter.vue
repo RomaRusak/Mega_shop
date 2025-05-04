@@ -5,7 +5,7 @@
             <li 
             v-for="category in getFilters('categories')" 
             :key="category.id"
-            @click="SELECT_CATEGORY(category.id)"
+            @click="SET_CATEGORY(category.id)"
             :class="{ 'selected': category.isSelected }"
             >
                 <router-link :to="'/products/' + category.slug">{{ category.name }}</router-link>
@@ -23,7 +23,7 @@ import { mapGetters, mapMutations } from 'vuex';
             ...mapGetters(['getFilters']),
         },
         methods: {
-            ...mapMutations(['SELECT_CATEGORY']),
+            ...mapMutations(['SET_CATEGORY']),
         },
     }
 </script>

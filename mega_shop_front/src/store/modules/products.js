@@ -1,3 +1,4 @@
+import ProductsRequestService from "@/services/ProductsRequestService";
 import axios from "axios";
 
 export default {
@@ -18,9 +19,10 @@ export default {
         }
       },
       actions: {
-        async asyncFetchProductsData({commit}) {
-            try {
-                const responce = await axios.get("http://mega_shop.com/api/products");
+        async asyncFetchProductsData({commit}, payload) {
+          try {
+                const request = ProductsRequestService.prepareRequest(payload)
+                const responce = await axios.get(request);
 
                 if (responce.status === 200) {
                     const {products, pagination} = responce.data.data;
