@@ -41,10 +41,9 @@ export default {
                 min_price: selectedMinPrice, 
                 max_price: selectedMaxPrice,
             });
-
-            const currentRoute = this.$route.path.split('?')[0];
-
-            this.$router.push(currentRoute + `?${updatedFilterParams}`);
+            
+            // const currentRoute = this.$route.path.split('?')[0];
+            // this.$router.push(currentRoute + `?${updatedFilterParams}`);
 
             this.asyncFetchProductsData({
                 filterParams: updatedFilterParams,
