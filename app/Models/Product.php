@@ -41,8 +41,8 @@ class Product extends Model
     {
         $color               = $preparedRequestParams['color'];
         $size                = $preparedRequestParams['size'];
-        $minPrice            = $preparedRequestParams['min_price'];
-        $maxPrice            = $preparedRequestParams['max_price'];
+        // $minPrice            = $preparedRequestParams['min_price'];
+        // $maxPrice            = $preparedRequestParams['max_price'];
         $categorySlug        = $preparedRequestParams['categorySlug'];
         $brandSlug           = $preparedRequestParams['brand'];
 
@@ -76,19 +76,19 @@ class Product extends Model
             });
         }
         
-        if (!empty($minPrice)) {
-            $query->whereHas('productVariants', function ($query) use ($minPrice) {
-                $query->where('price', '>=', $minPrice)
-                      ->where('quantity', '>', 0);
-            });
-        }
+        // if (!empty($minPrice)) {
+        //     $query->whereHas('productVariants', function ($query) use ($minPrice) {
+        //         $query->where('price', '>=', $minPrice)
+        //               ->where('quantity', '>', 0);
+        //     });
+        // }
         
-        if (!empty($maxPrice)) {
-            $query->whereHas('productVariants', function ($query) use ($maxPrice) {
-                $query->where('price', '<=', $maxPrice)
-                      ->where('quantity', '>', 0);
-            });
-        }
+        // if (!empty($maxPrice)) {
+        //     $query->whereHas('productVariants', function ($query) use ($maxPrice) {
+        //         $query->where('price', '<=', $maxPrice)
+        //               ->where('quantity', '>', 0);
+        //     });
+        // }
 
         return $query->get();
     }

@@ -24,7 +24,7 @@ class ProductVariantPriceService {
             $maxActualDiscount = max($actualDiscountValues);
             $productPrice = (float) $productWithDiscount['price'];
 
-            $finalPrice = $productPrice - ($productPrice * $maxActualDiscount / 100);
+            $finalPrice = $this->getFinalPrice($productPrice, $maxActualDiscount);
 
             $prices[] = round($finalPrice, 2);
         }
@@ -32,17 +32,21 @@ class ProductVariantPriceService {
         return $prices;
     }
 
-    private function getActualDiscounts(array $discounts): array
+    public function getActualDiscounts(array $discounts): array
     {
         return array_filter($discounts, function($discount) {
             return $discount['discount_start'] <= now() && $discount['discount_end'] >= now();
         });
     }
 
-    private function getActualDiscountValues(array $actualDiscounts): array
+    public function getActualDiscountValues(array $actualDiscounts): array
     {
         return array_map(function($discount) {
             return (float) $discount['discount_percent'];
         }, $actualDiscounts);
     } 
+
+    public function getFinalPrice(float $productPrice, float $maxActualDiscount) {
+        return $productPrice - ($productPrice * $maxActualDiscount / 100);
+    }
 }

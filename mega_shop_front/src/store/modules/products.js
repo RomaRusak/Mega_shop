@@ -1,5 +1,4 @@
 import ProductsRequestService from "@/services/ProductsRequestService";
-import ProductsTransformedService from "@/services/ProductsTransformedService";
 import axios from "axios";
 
 export default {
@@ -22,14 +21,13 @@ export default {
       actions: {
         async asyncFetchProductsData({commit}, payload) {
           try {
-                const request = ProductsRequestService.prepareRequest(payload)
+                const request = ProductsRequestService.prepareRequest(payload);
                 const responce = await axios.get(request);
 
                 if (responce.status === 200) {
                   const {products, pagination} = responce.data.data;
-                  const preparedProducts = ProductsTransformedService.prepareProductsData({products});
 
-                  commit('SET_PRODUCTS_DATA', {products: preparedProducts, pagination});
+                  commit('SET_PRODUCTS_DATA', {products, pagination});
                 }
             } catch(error) {
                 console.error(error);
@@ -42,7 +40,6 @@ export default {
         },
         
         getProductIds(state) {
-          console.log(state.productsData.products);
           return state.productsData.products.map(product => product.id);
         },
 
@@ -79,7 +76,7 @@ export default {
         getMinProductPrice(state, getters) {
           return (id) => {
             const product = getters.getProductById(id);
-            const productVariantPrices = product.product_variants.map(({priceWithDiscount}) => +priceWithDiscount);
+            const productVariantPrices = product.product_variants.map(({price_with_discount}) => +price_with_discount);
 
             return Math.min(...productVariantPrices);
           }
@@ -88,7 +85,7 @@ export default {
         getMaxProductPrice(state, getters) {
           return (id) => {
             const product = getters.getProductById(id);
-            const productVariantPrices = product.product_variants.map(({priceWithDiscount}) => +priceWithDiscount);
+            const productVariantPrices = product.product_variants.map(({price_with_discount}) => +price_with_discount);
 
             return Math.max(...productVariantPrices);
           }
