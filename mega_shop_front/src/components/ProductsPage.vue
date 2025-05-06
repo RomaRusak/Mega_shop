@@ -1,14 +1,20 @@
 <template>
     <div class="products-wrapper">
         <filter-sidebar />
-        <div class="product-card-wrapper">
-            <product-card 
-            v-for="(productId) in getProductIds"
-            :key="productId"
-            :productId="productId"
-            />
+        <div>
+            <products-preloader  v-if="getProductsIsLoading"/>
+            <div v-else>
+                <div class="product-card-wrapper">
+                    <product-card 
+                    v-for="(productId) in getProductIds"
+                    :key="productId"
+                    :productId="productId"
+                    />
+                </div>
+                <pagination-controls />
+            </div>
+            <products-filter-params-handler />
         </div>
-        <products-url-params-updater />
     </div>
 </template>
 
@@ -16,18 +22,22 @@
 import store from '@/store';
 import { mapGetters } from 'vuex';
 import FilterSidebar from './FilterSidebar.vue';
-import ProductsURLParamsUpdater from './ProductsURLParamsUpdater.vue';
 import ProductCard from './ProductCard.vue';
+import ProductsFilterParamsHanlder from './ProductsFilterParamsHanlder.vue';
+import PaginationControls from './PaginationControls.vue';
+import ProductsPreloader from './UI/ProductsPreloader.vue';
 
     export default {
         store,
         components: {
             'filter-sidebar': FilterSidebar,
-            'products-url-params-updater': ProductsURLParamsUpdater,
+            'products-filter-params-handler': ProductsFilterParamsHanlder,
             'product-card': ProductCard,
+            'pagination-controls': PaginationControls,
+            'products-preloader': ProductsPreloader,
         },
         computed: {
-            ...mapGetters(['getProductIds']),
+            ...mapGetters(['getProductIds', 'getProductsIsLoading']),
         },
     }
 </script>

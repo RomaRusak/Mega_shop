@@ -5,10 +5,11 @@
             <li 
             v-for="category in getFilters('categories')" 
             :key="category.id"
-            @click="SET_CATEGORY(category.id)"
+            @click="categoryClickHandler(category)"
             :class="{ 'selected': category.isSelected }"
             >
-                <router-link :to="'/products/' + category.slug">{{ category.name }}</router-link>
+                <!-- <router-link :to="'/products/' + category.slug">{{ category.name }}</router-link> -->
+                <p>{{ category.slug }}</p>
             </li>
         </ul>
     </div>
@@ -24,6 +25,23 @@ import { mapGetters, mapMutations } from 'vuex';
         },
         methods: {
             ...mapMutations(['SET_CATEGORY']),
+
+            categoryClickHandler(category) {
+                const categorySlug = this.getCategorySlug(category.slug);
+
+                this.$router.push({ name: 'products', params: { categorySlug,}})
+                this.SET_CATEGORY(category.id);
+            },
+
+            getCategorySlug(slug) {
+                const existingCategorySlug = this.$route.params.categorySlug;
+
+                if (existingCategorySlug === slug) {
+                    return ''
+                }
+
+                return slug;
+            }
         },
     }
 </script>

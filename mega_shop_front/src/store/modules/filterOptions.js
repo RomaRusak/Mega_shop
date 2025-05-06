@@ -28,7 +28,7 @@ export default {
             state.filterOptions = {
                 ...state.filterOptions,
                 categories: state.filterOptions.categories.map(category => {
-                    if (category.id === id) return {...category, isSelected: true};
+                    if (category.id === id) return {...category, isSelected: !category.isSelected};
                     return {...category, isSelected: false};
                 })
             };

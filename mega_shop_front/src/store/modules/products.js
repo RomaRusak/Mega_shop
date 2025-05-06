@@ -5,6 +5,7 @@ export default {
     state() {
         return {
           productsData: {
+            isLoading: false,
             products: [],
             pagination: {},
           },
@@ -12,16 +13,32 @@ export default {
       },
       mutations: {
         SET_PRODUCTS_DATA(state, {products, pagination}) {
-            state.productsData = {
-                products: [...products],
-                pagination: {...pagination},
-            };
+          state.productsData = {
+              ...state.productsData,
+              products: [...products],
+              pagination: {...pagination},
+          };
+        },
+
+        SET_PRODUCTS_PAGINATION_PAGE(state, {page}) {
+          state.productsData.pagination = {
+            ...state.productsData.pagination,
+            page,
+          }
+        },
+
+        SET_IS_LOADING_STATUS(state, {loadingStatus}) {
+          state.productsData = {
+            ...state.productsData,
+            isLoading: loadingStatus,
+          }
         }
       },
       actions: {
         async asyncFetchProductsData({commit}, payload) {
           try {
                 const request = ProductsRequestService.prepareRequest(payload);
+                commit('SET_IS_LOADING_STATUS', {loadingStatus: true});
                 const responce = await axios.get(request);
 
                 if (responce.status === 200) {
@@ -29,8 +46,11 @@ export default {
 
                   commit('SET_PRODUCTS_DATA', {products, pagination});
                 }
+
+                commit('SET_IS_LOADING_STATUS', {loadingStatus: false});
             } catch(error) {
-                console.error(error);
+              console.error(error);
+              commit('SET_IS_LOADING_STATUS', {loadingStatus: false});
             }
         }
       },
@@ -90,5 +110,20 @@ export default {
             return Math.max(...productVariantPrices);
           }
         },
+
+        getPaginationData(state) {
+          return state.productsData.pagination;
+        },
+
+        getPaginationDataByKey(state) {
+          return (key) => {
+            // console.log(state.productsData.pagination);
+            return state.productsData.pagination[key];
+          }
+        },
+
+        getProductsIsLoading(state) {
+          return state.productsData.isLoading;
+        }
       }
 };
