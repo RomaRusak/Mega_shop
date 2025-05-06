@@ -20,7 +20,7 @@
 
 <script>
 import store from '@/store';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import FilterSidebar from './FilterSidebar.vue';
 import ProductCard from './ProductCard.vue';
 import ProductsFilterParamsHanlder from './ProductsFilterParamsHanlder.vue';
@@ -39,6 +39,26 @@ import ProductsPreloader from './UI/ProductsPreloader.vue';
         computed: {
             ...mapGetters(['getProductIds', 'getProductsIsLoading']),
         },
+        methods: {
+            ...mapMutations(['RESET_PRODUCTS_STORE', 'RESET_FILTERS_STORE']),
+            ...mapActions(['asyncFetchProductsData', 'asyncFetchUniqFilterValues'])
+        },
+
+        async mounted() {
+            try {
+                await Promise.all([
+                    this.asyncFetchProductsData(),
+                    this.asyncFetchUniqFilterValues()
+                ]);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        beforeUnmount() {
+            this.RESET_PRODUCTS_STORE();
+            this.RESET_FILTERS_STORE();
+        }
     }
 </script>
 

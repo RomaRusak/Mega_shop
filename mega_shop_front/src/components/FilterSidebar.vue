@@ -25,24 +25,15 @@
 </template>
 
 <script>
-import store from '@/store';
-import { mapActions } from 'vuex';
 import CategoryFilter from './CategoryFilter.vue';
 import FilterCheckboxes from './FilterCheckboxes.vue';
 import PriceFilter from './PriceFilter.vue';
 
     export default {
-        store,
         components: {
             'category-filter': CategoryFilter,
             'filter-checkboxes': FilterCheckboxes,
             'price-filter': PriceFilter,
         },
-        methods: {
-            ...mapActions(['asyncFetchUniqFilterValues']),
-        },
-        mounted() {
-            this.asyncFetchUniqFilterValues();
-        }
     }
 </script>

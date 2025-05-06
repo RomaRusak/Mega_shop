@@ -7,14 +7,7 @@ export default {
         return {
             jsonedDefFiltOpt: '',
             filterOptions: {
-                categories: [],
-                brands: [],
-                colors: [],
-                sizes: [],
-                maxProductPrice:  0,
-                minProductPrice:  0,
-                selectedMinPrice: 0,
-                selectedMaxPrice: 0,
+                
             }
         }
     },
@@ -51,7 +44,13 @@ export default {
                 ...state.filterOptions,
                 [key]: +selectedPrice,
             };
+        },
+
+        RESET_FILTERS_STORE(state) {
+            state.jsonedDefFiltOpt = '';
+            state.filterOptions = {};
         }
+
     },
     actions: {
         async asyncFetchUniqFilterValues({ commit }) {

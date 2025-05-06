@@ -24,7 +24,10 @@ export default {
         }
     },
     watch: {
-        getAllFilters() {
+        getAllFilters(_, prevState) {
+            //Не должно тригериться в момент инициализации стора
+            if (!Object.values(prevState).length) return;
+
             this.SET_PRODUCTS_PAGINATION_PAGE({page: 1});
             this.debouncedChangeFilterParamsHandler();
         },

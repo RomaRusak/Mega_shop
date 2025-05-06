@@ -32,6 +32,14 @@ export default {
             ...state.productsData,
             isLoading: loadingStatus,
           }
+        },
+
+        RESET_PRODUCTS_STORE(state) {
+          state.productsData = {
+            isLoading: false,
+            products: [],
+            pagination: {},
+          };
         }
       },
       actions: {

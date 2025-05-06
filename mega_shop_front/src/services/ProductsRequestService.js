@@ -1,6 +1,12 @@
 class ProductsRequestService {
-    static prepareRequest({filterParams, categorySlug}) {
+    static prepareRequest(params) {
         let baseEndPoint = 'http://mega_shop.com/api/products';
+
+        if (!params) {
+            return baseEndPoint;
+        }
+
+        const {filterParams, categorySlug} = params
         
         if (categorySlug) {
             baseEndPoint = baseEndPoint + `/${categorySlug}`;
