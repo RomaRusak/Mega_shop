@@ -46,7 +46,9 @@ export default {
         async asyncFetchProductsData({commit}, payload) {
           try {
                 const request = ProductsRequestService.prepareRequest(payload);
+
                 commit('SET_IS_LOADING_STATUS', {loadingStatus: true});
+
                 const responce = await axios.get(request);
 
                 if (responce.status === 200) {
@@ -132,6 +134,6 @@ export default {
 
         getProductsIsLoading(state) {
           return state.productsData.isLoading;
-        }
+        },
       }
 };

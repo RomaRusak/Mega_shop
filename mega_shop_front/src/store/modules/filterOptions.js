@@ -5,7 +5,6 @@ import axios from "axios";
 export default {
     state() {
         return {
-            jsonedDefFiltOpt: '',
             filterOptions: {
                 
             }
@@ -13,7 +12,6 @@ export default {
     },
     mutations: {    
         INIT_FILTER_OPTIONS_STORE(state, {preparedData}) {
-            state.jsonedDefFiltOpt = JSON.stringify(preparedData),
             state.filterOptions = {...preparedData};
         },
 
@@ -47,7 +45,6 @@ export default {
         },
 
         RESET_FILTERS_STORE(state) {
-            state.jsonedDefFiltOpt = '';
             state.filterOptions = {};
         }
 

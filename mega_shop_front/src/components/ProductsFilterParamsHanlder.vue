@@ -17,7 +17,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['getAllFilters', 'getPaginationDataByKey']),
+        ...mapGetters(['getAllFilters', 'getPaginationDataByKey',]),
 
         getSelectedPaginationPage() {
             return this.getPaginationDataByKey('page');    
@@ -61,9 +61,9 @@ export default {
                 max_price: selectedMaxPrice,
                 page:      selectedPaginationPage,
             });
-
-            // const currentRoute = this.$route.path.split('?')[0];
-            // this.$router.push(currentRoute + `?${updatedFilterParams}`);
+            
+            const currentRoute = this.$route.path.split('?')[0];
+            this.$router.push(currentRoute + `?${updatedFilterParams}`);
 
             this.asyncFetchProductsData({
                 filterParams: updatedFilterParams,
@@ -99,9 +99,7 @@ export default {
 
             return updatedFilterParams.join('&')
         },
+
     },
-    created() {
-        this.$router.push('/products');
-    }
 }
 </script>
