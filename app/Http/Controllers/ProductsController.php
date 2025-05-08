@@ -74,4 +74,5 @@ class ProductsController extends Controller
 
         return new ProductResource($this->productModel->getProductById($productId));
     }
+    
 }
