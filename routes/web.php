@@ -8,6 +8,6 @@ Route::get('/', function () {
     return view('app');
 });
 
-Route::get('/products', function () {
+Route::get('/products/{categorySlug?}', function () {
     return view('app');
 });

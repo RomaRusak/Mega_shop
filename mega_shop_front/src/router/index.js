@@ -6,10 +6,12 @@ import ProductsPage from '../components/ProductsPage.vue';
 const routes = [
     {
         path: '/',
+        name: 'home',
         component: HomePage
     },
     {
-        path: '/products',
+        path: '/products/:categorySlug?',
+        name: 'products',
         component: ProductsPage
     },
 ]

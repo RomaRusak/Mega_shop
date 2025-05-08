@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Http\Helpers\GeneralHelper;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -41,15 +39,12 @@ class Product extends Model
 
     public function getFilteredProducts(array $preparedRequestParams): Collection
     {
-        $transformedBrand    = array_map(function($brand) {
-            return strtolower(GeneralHelper::underscoresToSpace($brand));
-        }, $preparedRequestParams['brand']);
-        
         $color               = $preparedRequestParams['color'];
         $size                = $preparedRequestParams['size'];
-        $minPrice            = $preparedRequestParams['min_price'];
-        $maxPrice            = $preparedRequestParams['max_price'];
+        // $minPrice            = $preparedRequestParams['min_price'];
+        // $maxPrice            = $preparedRequestParams['max_price'];
         $categorySlug        = $preparedRequestParams['categorySlug'];
+        $brandSlug           = $preparedRequestParams['brand'];
 
         $query = $this->withProductRelations(
             $this::select('id', 'name', 'brand_id', 'category_id', 'rating')
@@ -61,9 +56,9 @@ class Product extends Model
             });
         }
 
-        if (!empty($transformedBrand)) {
-            $query->whereHas('brand', function ($query) use ($transformedBrand) {
-                $query->whereIn(DB::raw('LOWER(name)'), $transformedBrand);
+        if (!empty($brandSlug)) {
+            $query->whereHas('brand', function ($query) use ($brandSlug) {
+                $query->whereIn('slug', $brandSlug);
             });
         }
         
@@ -81,19 +76,19 @@ class Product extends Model
             });
         }
         
-        if (!empty($minPrice)) {
-            $query->whereHas('productVariants', function ($query) use ($minPrice) {
-                $query->where('price', '>=', $minPrice)
-                      ->where('quantity', '>', 0);
-            });
-        }
+        // if (!empty($minPrice)) {
+        //     $query->whereHas('productVariants', function ($query) use ($minPrice) {
+        //         $query->where('price', '>=', $minPrice)
+        //               ->where('quantity', '>', 0);
+        //     });
+        // }
         
-        if (!empty($maxPrice)) {
-            $query->whereHas('productVariants', function ($query) use ($maxPrice) {
-                $query->where('price', '<=', $maxPrice)
-                      ->where('quantity', '>', 0);
-            });
-        }
+        // if (!empty($maxPrice)) {
+        //     $query->whereHas('productVariants', function ($query) use ($maxPrice) {
+        //         $query->where('price', '<=', $maxPrice)
+        //               ->where('quantity', '>', 0);
+        //     });
+        // }
 
         return $query->get();
     }
