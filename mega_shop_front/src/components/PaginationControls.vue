@@ -18,23 +18,23 @@
 </template>
 
 <script>
-import store from '@/store';
-import { mapGetters, mapMutations } from 'vuex';
+import { useStore } from 'vuex';
 import PaginationItem from './UI/PaginationItem.vue';
+import { computed } from 'vue';
 import { debounce } from 'lodash';
 
     export default {
-        store,
         components: {
             'pagination-item': PaginationItem,
         },
-        computed: {
-            ...mapGetters(['getPaginationDataByKey', 'getProductsIsLoading']),
+        setup() {
+            const store = useStore();
 
-            paginationItemsData() {
+            // computeds
+            const paginationItemsData = computed(() => {
                 const paginationItems = [];
-                const totalPages = this.getPaginationDataByKey('total_pages')
-                const selectedPage = this.getPaginationDataByKey('page');
+                const totalPages = getPaginationDataByKey('total_pages')
+                const selectedPage = getPaginationDataByKey('page');
                 
                 for(let i = 1; i <= totalPages; i++) {
                     paginationItems.push({
@@ -44,21 +44,32 @@ import { debounce } from 'lodash';
                 }
 
                 return paginationItems;
-            }
-        },
-        methods: {
-            ...mapMutations(['SET_PRODUCTS_PAGINATION_PAGE']),
+            });
 
-            clickPaginationItemHandler(payload) {
-                if (this.getProductsIsLoading) {
+            const getProductsIsLoading = computed(() => store.getters.getProductsIsLoading);
+
+            //methods
+            function getPaginationDataByKey(key) {
+                return store.getters.getPaginationDataByKey(key);
+            }
+
+            const debouncedSetProductsPaginationPage = debounce(function(payload) {
+                store.commit('SET_PRODUCTS_PAGINATION_PAGE', payload);
+            }, 300);
+
+            function clickPaginationItemHandler(payload) {
+                if (getProductsIsLoading.value) {
                     return;
                 }
-                this.debouncedSetProductsPaginationPage(payload);
-            },
+                debouncedSetProductsPaginationPage(payload);
+            }
 
-            debouncedSetProductsPaginationPage: debounce(function(payload) {
-                this.SET_PRODUCTS_PAGINATION_PAGE(payload);
-            }, 300) 
+
+            return {
+                paginationItemsData,
+                getPaginationDataByKey,
+                clickPaginationItemHandler,
+            }
         }
     }
 </script>

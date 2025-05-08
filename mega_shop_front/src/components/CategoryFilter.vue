@@ -8,33 +8,35 @@
             @click="categoryClickHandler(category)"
             :class="{ 'selected': category.isSelected }"
             >
-                <!-- <router-link :to="'/products/' + category.slug">{{ category.name }}</router-link> -->
-                <p>{{ category.slug }}</p>
+                <p>{{ category.name }}</p>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import store from '@/store';
-import { mapGetters, mapMutations } from 'vuex';
+import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router';
+import { useGetFilters } from '@/compossables/useGetFilters';
     export default {
-        store,
-        computed: {
-            ...mapGetters(['getFilters']),
-        },
-        methods: {
-            ...mapMutations(['SET_CATEGORY']),
+        setup() {
+            const store = useStore();
+            const router = useRouter();
+            const route = useRoute();
 
-            categoryClickHandler(category) {
-                const categorySlug = this.getCategorySlug(category.slug);
+            //computeds
+            const { getFilters } = useGetFilters();
+            
+            //methods
+            function categoryClickHandler(category) {
+                const categorySlug = getCategorySlug(category.slug);
 
-                this.$router.push({ name: 'products', params: { categorySlug,}})
-                this.SET_CATEGORY(category.id);
-            },
+                router.push({ name: 'products', params: { categorySlug,}})
+                store.commit('SET_CATEGORY', category.id);
+            }
 
-            getCategorySlug(slug) {
-                const existingCategorySlug = this.$route.params.categorySlug;
+            function getCategorySlug(slug) {
+                const existingCategorySlug = route.params.categorySlug;
 
                 if (existingCategorySlug === slug) {
                     return ''
@@ -42,7 +44,12 @@ import { mapGetters, mapMutations } from 'vuex';
 
                 return slug;
             }
-        },
+
+            return {
+                getFilters,
+                categoryClickHandler,
+            }
+        }
     }
 </script>
 

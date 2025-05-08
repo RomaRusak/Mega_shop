@@ -1,14 +1,14 @@
 <template>
     <div 
     :class="isChecked ? 'checked checkbox' : 'checkbox'"
-    @click="HANDLE_CHECKBOX_CHANGE({key: filterKey, id: id})"
+    @click="hanldeCheckboxChange({key: filterKey, id: id})"
     >
     </div>
 </template>
 
 <script>
-import store from '@/store';
-import { mapMutations } from 'vuex';
+import { useStore } from 'vuex';
+
     export default {
         props: {
             isChecked: {
@@ -24,9 +24,17 @@ import { mapMutations } from 'vuex';
                 required: true,
             },
         },
-        store,
-        methods: {
-            ...mapMutations(['HANDLE_CHECKBOX_CHANGE']),
+        setup() {
+            const store = useStore();
+
+            //methods
+            function hanldeCheckboxChange(payload) {
+                store.commit('HANDLE_CHECKBOX_CHANGE', payload);
+            }
+
+            return {
+                hanldeCheckboxChange,
+            };
         }
     }
 </script>

@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { computed } from 'vue';
     export default {
         props: {
             pageNumber: {
@@ -19,9 +20,14 @@
             }
         },
         emits: ['click'],
-        computed: {
-            paginationItemClass() {
-                return this.isSelected ? 'page-number-wrapper selected-page' : 'page-number-wrapper';
+        setup(props) {
+            //computeds
+            const paginationItemClass = computed(() => {
+                return props.isSelected ? 'page-number-wrapper selected-page' : 'page-number-wrapper';
+            });
+
+            return {
+                paginationItemClass,
             }
         }
     }

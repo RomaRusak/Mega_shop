@@ -12,7 +12,7 @@
                 type="checkbox" 
                 :id="filt.name"
                 :checked="filt.isChecked" 
-                @click.prevent="HANDLE_CHECKBOX_CHANGE({key: filterKey, id: filt.id})"
+                @click.prevent="handleCheckboxChange({key: filterKey, id: filt.id})"
                 >
                 <custom-checkbox 
                 :isChecked="filt.isChecked"
@@ -27,9 +27,9 @@
 </template>
 
 <script>
-import store from '@/store';
+import { useStore } from 'vuex';
 import CustomCheckbox from './UI/CustomCheckbox.vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { useGetFilters } from '@/compossables/useGetFilters';
     export default {
         props: {
             filterKey: {
@@ -42,13 +42,22 @@ import { mapGetters, mapMutations } from 'vuex';
                 default: '',
             },
         },
-        store,
         components: {'custom-checkbox': CustomCheckbox},
-        computed: {
-            ...mapGetters(['getFilters']),
-        },
-        methods: {
-            ...mapMutations(['HANDLE_CHECKBOX_CHANGE']),
-        },
+        setup() {
+            const store = useStore();
+            
+            //computeds
+            const {getFilters} = useGetFilters();
+
+            //methods
+            function handleCheckboxChange(payload) {
+                store.commit('HANDLE_CHECKBOX_CHANGE', payload);
+            }
+
+            return {
+                getFilters,
+                handleCheckboxChange,
+            }
+        }
     }
 </script>

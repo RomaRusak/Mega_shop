@@ -1,16 +1,17 @@
 <template>
     <div>
-        <h2>{{ getProductName(productId) }}</h2>
-        <p>category: {{ getProductCategory(productId) }}</p>
-        <p>brand: {{ getProductBrand(productId) }}</p>
-        <p>rating: {{ getProductRating(productId) }}</p>
-        <p>Prices: {{getMinProductPrice(productId)}} - {{ getMaxProductPrice(productId) }}</p>
+        <h2>{{ productName(productId) }}</h2>
+        <p>category: {{ productCategory(productId) }}</p>
+        <p>brand: {{ productBrand(productId) }}</p>
+        <p>rating: {{ productRating(productId) }}</p>
+        <p>Prices: {{ minProductPrice(productId) }} - {{ maxProductPrice(productId) }}</p>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import store from '@/store';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+
     export default {
         props: {
             productId: {
@@ -18,16 +19,26 @@ import store from '@/store';
                 required: true
             }
         },
-        store,
-        computed: {
-            ...mapGetters([
-                'getProductName',
-                'getProductCategory',
-                'getProductBrand',
-                'getProductRating',
-                'getMinProductPrice',
-                'getMaxProductPrice',
-            ]),
+
+        setup() {
+            const store = useStore();
+            
+            // computeds
+            const productName = computed(() => store.getters.getProductName);
+            const productCategory = computed(() => store.getters.getProductCategory);
+            const productBrand = computed(() => store.getters.getProductBrand);
+            const productRating = computed(() => store.getters.getProductRating);
+            const minProductPrice = computed(() => store.getters.getMinProductPrice);
+            const maxProductPrice = computed(() => store.getters.getMaxProductPrice);
+
+            return {
+                productName,
+                productCategory,
+                productBrand,
+                productRating,
+                minProductPrice,
+                maxProductPrice
+            };
         }
     };
 </script>

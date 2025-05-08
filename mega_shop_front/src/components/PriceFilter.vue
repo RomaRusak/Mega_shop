@@ -10,7 +10,7 @@
                 :max="maxProductPrice" 
                 step="1" 
                 :value="selectedPrice"
-                @input="SET_PRICE({
+                @input="setPrice({
                     selectedPrice: $event.target.value,
                     key: filterKey,
                     })"
@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import store from '@/store';
-import { mapGetters, mapMutations } from 'vuex';
+import { useStore } from 'vuex';
+import { useGetFilters } from '@/compossables/useGetFilters';
     export default {
         props: {
             title: {
@@ -38,21 +38,26 @@ import { mapGetters, mapMutations } from 'vuex';
                 required: true,
             },
         },
-        store,
-        computed: {
-            ...mapGetters(['getFilters']),
-            maxProductPrice() {
-                return this.getFilters('maxProductPrice');
-            },
-            minProductPrice() {
-                return this.getFilters('minProductPrice');
-            },
-            selectedPrice() {
-                return this.getFilters(this.filterKey);
+        setup(props) {
+            const store = useStore();
+
+            // computeds
+            const {getFilters} = useGetFilters();
+            const maxProductPrice = getFilters.value('maxProductPrice');
+            const minProductPrice = getFilters.value('minProductPrice');
+            const selectedPrice   = getFilters.value(props.filterKey);
+
+            //methods
+            function setPrice(payload) {
+                store.commit('SET_PRICE', payload);
             }
-        },
-        methods: {
-            ...mapMutations(['SET_PRICE']),
+
+            return {
+                maxProductPrice,
+                minProductPrice,
+                selectedPrice,
+                setPrice,
+            };
         }
     }
 </script>

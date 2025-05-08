@@ -13,53 +13,74 @@
                 </div>
                 <pagination-controls />
             </div>
-            <products-filter-params-handler />
         </div>
     </div>
 </template>
 
 <script>
-import store from '@/store';
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { onMounted, onBeforeUnmount, computed } from 'vue';
+import { useStore } from 'vuex';
 import FilterSidebar from './FilterSidebar.vue';
 import ProductCard from './ProductCard.vue';
-import ProductsFilterParamsHanlder from './ProductsFilterParamsHanlder.vue';
 import PaginationControls from './PaginationControls.vue';
 import ProductsPreloader from './UI/ProductsPreloader.vue';
+import { useProductsFilterParamsHanlde } from '@/compossables/useProductsFilterParamsHanlde';
 
-    export default {
-        store,
-        components: {
-            'filter-sidebar': FilterSidebar,
-            'products-filter-params-handler': ProductsFilterParamsHanlder,
-            'product-card': ProductCard,
-            'pagination-controls': PaginationControls,
-            'products-preloader': ProductsPreloader,
-        },
-        computed: {
-            ...mapGetters(['getProductIds', 'getProductsIsLoading']),
-        },
-        methods: {
-            ...mapMutations(['RESET_PRODUCTS_STORE', 'RESET_FILTERS_STORE']),
-            ...mapActions(['asyncFetchProductsData', 'asyncFetchUniqFilterValues'])
-        },
+export default {
+  components: {
+    'filter-sidebar': FilterSidebar,
+    'product-card': ProductCard,
+    'pagination-controls': PaginationControls,
+    'products-preloader': ProductsPreloader,
+  },
 
-        async mounted() {
-            try {
-                await Promise.all([
-                    this.asyncFetchProductsData(),
-                    this.asyncFetchUniqFilterValues()
-                ]);
-            } catch (error) {
-                console.error(error);
-            }
-        },
+  setup() {
+    const store = useStore();
+    
+    //compossible
+    useProductsFilterParamsHanlde();
 
-        beforeUnmount() {
-            this.RESET_PRODUCTS_STORE();
-            this.RESET_FILTERS_STORE();
-        }
+    // computeds
+    const getProductIds = computed(() => store.getters.getProductIds);
+    const getProductsIsLoading = computed(() => store.getters.getProductsIsLoading);
+
+    //methods
+    function resetProductsStore() {
+        store.commit('RESET_PRODUCTS_STORE')
     }
+
+    function resetFiltersStore() {
+        store.commit('RESET_FILTERS_STORE');
+    }
+
+    function asyncFetchProductsData() {
+        store.dispatch('asyncFetchProductsData')
+    }
+
+    function asyncFetchUniqFilterValues() {
+        store.dispatch('asyncFetchUniqFilterValues')
+    }
+
+     //lifeHooks
+    onMounted(async () => {
+        try {
+            await Promise.all([asyncFetchProductsData(), asyncFetchUniqFilterValues()]);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    onBeforeUnmount(() => {
+        resetProductsStore();
+        resetFiltersStore();
+    });
+
+    return {
+        getProductIds,
+        getProductsIsLoading,
+    };
+  },
+};
 </script>
 
 <style scoped>
