@@ -26,4 +26,5 @@ class FiltersController extends Controller
             'max_product_price' => $productVariantModel->max('price')
         ]);
     }
+    
 }
