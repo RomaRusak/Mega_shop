@@ -3,8 +3,8 @@
 namespace App\Http\Traits;
 
 trait GetUniqValuesArr {
-    public function getUniqValuesArr($field)
+    public function getUniqValuesArr(string $distinctField, array $selectedFields)
     {
-        return $this->distinct($field)->pluck($field);
+        return $this->distinct($distinctField)->get()->select($selectedFields)->toArray();
     }
 }
