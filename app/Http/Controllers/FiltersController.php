@@ -33,4 +33,5 @@ class FiltersController extends Controller
             'max_product_price' => $maxProductPrice,
         ]);
     }
+    
 }
