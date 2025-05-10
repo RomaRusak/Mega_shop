@@ -26,6 +26,7 @@
 
 <script>
 import { useStore } from 'vuex';
+import { computed } from 'vue';
 import { useGetFilters } from '@/compossables/useGetFilters';
     export default {
         props: {
@@ -43,9 +44,9 @@ import { useGetFilters } from '@/compossables/useGetFilters';
 
             // computeds
             const {getFilters} = useGetFilters();
-            const maxProductPrice = getFilters.value('maxProductPrice');
-            const minProductPrice = getFilters.value('minProductPrice');
-            const selectedPrice   = getFilters.value(props.filterKey);
+            const maxProductPrice = computed(() => getFilters.value('maxProductPrice'));
+            const minProductPrice = computed(() => getFilters.value('minProductPrice'));
+            const selectedPrice   = computed(() => getFilters.value(props.filterKey));
 
             //methods
             function setPrice(payload) {
