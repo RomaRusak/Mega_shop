@@ -33,9 +33,4 @@ class ProductVariant extends Model
     {
        return $this->belongsToMany(Discount::class, 'discount_product_variant', 'product_variant_id', 'discount_id');
     }
-
-    public function getProdVarWithDiscounts()
-    {
-        return $this->with('discounts')->get()->toArray();
-    }
 }

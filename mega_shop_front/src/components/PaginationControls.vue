@@ -6,7 +6,7 @@
             :key="pageNumber"
             :pageNumber="pageNumber"
             :isSelected="isSelected"
-            @click="clickPaginationItemHandler"
+            @clickPaginateItem="clickPaginationItemHandler"
             />
         </div>
         <div class="pagination-info-wrapper">

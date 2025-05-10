@@ -3,16 +3,17 @@
 namespace App\Http\Services;
 
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Repositories\ProductVariantRepository;
 
 class ProductsService {
 
-    private $productVariantPriceService = null;
+    private $productVariantRepository = null;
 
     public function __construct(
-        ProductVariantPriceService $productVariantPriceService,
+        ProductVariantRepository $productVariantRepository,
     )
     {
-        $this->productVariantPriceService = $productVariantPriceService;
+        $this->productVariantRepository = $productVariantRepository;
     }
 
     public function transformProducts(Collection $products): Collection
@@ -24,12 +25,12 @@ class ProductsService {
                 $discounts = $variant->discounts->toArray();
 
                 if (count($discounts)) {
-                    $actualDiscounts = $this->productVariantPriceService->getActualDiscounts($discounts);
+                    $actualDiscounts = $this->productVariantRepository->getActualDiscounts($discounts);
                     
                     if (count($actualDiscounts)) {
-                        $actualDiscountValues = $this->productVariantPriceService->getActualDiscountValues($actualDiscounts);
+                        $actualDiscountValues = $this->productVariantRepository->getActualDiscountValues($actualDiscounts);
                         $maxActualDiscount = max($actualDiscountValues);
-                        $finalPrice = round($this->productVariantPriceService->getFinalPrice($productPrice, $maxActualDiscount), 2);
+                        $finalPrice = round($this->productVariantRepository->getFinalPrice($productPrice, $maxActualDiscount), 2);
                     }
                 }
 
@@ -38,7 +39,7 @@ class ProductsService {
             });
             return $product;
         });
-
+        
         return $transformedProducts;
     }
 

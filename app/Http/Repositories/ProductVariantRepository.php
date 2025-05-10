@@ -1,8 +1,21 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Http\Repositories;
+use App\Models\ProductVariant;
 
-class ProductVariantPriceService {
+class ProductVariantRepository {
+    public $productVariantModel = null;
+    
+    public function __construct(ProductVariant $productVariant)
+    {
+        $this->productVariantModel = $productVariant;
+    }
+
+    public function getProdVarWithDiscounts()
+    {
+        return $this->productVariantModel->with('discounts')->get()->toArray();
+    }
+
     public function geAllProdVarPricesWithDisc(array $productsWithDiscount): array
     {
         $prices = [];

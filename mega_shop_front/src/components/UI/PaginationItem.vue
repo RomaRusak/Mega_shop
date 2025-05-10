@@ -1,7 +1,7 @@
 <template>
     <div 
     :class="paginationItemClass"
-    @click="$emit('click', {page: pageNumber})"
+    @click="$emit('clickPaginateItem', {page: pageNumber})"
     >
         <span>{{ pageNumber }}</span>
     </div>
@@ -19,7 +19,7 @@ import { computed } from 'vue';
                 type: Boolean,
             }
         },
-        emits: ['click'],
+        emits: ['clickPaginateItem'],
         setup(props) {
             //computeds
             const paginationItemClass = computed(() => {
