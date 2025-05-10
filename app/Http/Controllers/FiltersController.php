@@ -6,7 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ProductVariant;
 use App\Http\Resources\FiltersListResource;
-use App\Http\Services\ProductVariantPriceService;
+use App\Http\Repositories\ProductVariantRepository;
 
 class FiltersController extends Controller
 {
@@ -15,12 +15,12 @@ class FiltersController extends Controller
         Brand                      $brandModel, 
         Category                   $categoryModel, 
         ProductVariant             $productVariantModel,
-        ProductVariantPriceService $productVariantPriceService,
+        ProductVariantRepository   $productVariantRepiository,
         ): FiltersListResource
     {
 
-        $prodVarWithDiscounts      = $productVariantModel->getProdVarWithDiscounts();
-        $allProdVarPricesWithDisc  = $productVariantPriceService->geAllProdVarPricesWithDisc($prodVarWithDiscounts);
+        $prodVarWithDiscounts      = $productVariantRepiository->getProdVarWithDiscounts();
+        $allProdVarPricesWithDisc  = $productVariantRepiository->geAllProdVarPricesWithDisc($prodVarWithDiscounts);
         $minProductPrice           = floor(min($allProdVarPricesWithDisc));
         $maxProductPrice           = ceil(max($allProdVarPricesWithDisc));
 
