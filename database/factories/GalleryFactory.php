@@ -25,7 +25,8 @@ class GalleryFactory extends Factory
 
         for ($i = 0; $i < rand(1,4); $i++) {
             $imageData = ['image' => null, 'isMainImage' => false];
-            $imageData['image'] = ImageHepler::createImage(public_path('images'), 640, 480, $imageText . ' ' . $this->faker->word());
+            $imagePath = base_path('mega_shop_front/src/assets');
+            $imageData['image'] = basename(ImageHepler::createImage($imagePath, 640, 480, $imageText . ' ' . $this->faker->word()));
             $gallery[] = $imageData;
         };
 

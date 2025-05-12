@@ -5,6 +5,8 @@
         <p>brand: {{ productBrand(productId) }}</p>
         <p>rating: {{ productRating(productId) }}</p>
         <p>Prices: {{ minProductPrice(productId) }} - {{ maxProductPrice(productId) }}</p>
+        <p>Image: {{ productCardMainImage(productId) }}</p>
+        <img :src="require(`@/assets/${productCardMainImage(productId)}`)">
     </div>
 </template>
 
@@ -30,6 +32,7 @@ import { useStore } from 'vuex';
             const productRating = computed(() => store.getters.getProductRating);
             const minProductPrice = computed(() => store.getters.getMinProductPrice);
             const maxProductPrice = computed(() => store.getters.getMaxProductPrice);
+            const productCardMainImage = computed(() => store.getters.getProductCardMainImage);
 
             return {
                 productName,
@@ -37,7 +40,8 @@ import { useStore } from 'vuex';
                 productBrand,
                 productRating,
                 minProductPrice,
-                maxProductPrice
+                maxProductPrice,
+                productCardMainImage,
             };
         }
     };
