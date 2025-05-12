@@ -41,12 +41,23 @@ import { useStore } from 'vuex';
 
 <style scoped>
     .checkbox {
-        height: 20px;
-        width: 20px;
-        border: 1px solid black;
+        height: 30px;
+        width: 30px;
+        border: 1px solid #BEBCBD;
+        border-radius: 12px;
+        position: relative;
     }
 
-    .checkbox.checked {
-        background-color: green;
+    .checkbox.checked::before {
+        content: "";
+        display: block;
+        height: 20px;
+        width: 20px;
+        position: absolute;
+        top: calc(50% - 10px);
+        left: calc(50% - 10px);
+        background-image: url('../../assets/check_icon.svg');
+        background-position: center;
+        background-size: cover;
     }
 </style>

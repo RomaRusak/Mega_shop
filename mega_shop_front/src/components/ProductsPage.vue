@@ -84,13 +84,11 @@ export default {
 </script>
 
 <style scoped>
-    .gold {
-        background-color: gold;
-    }
 
     .products-wrapper {
         display: grid;
         grid-template-columns: 300px 1fr;
+        grid-column-gap: 50px;
     }
 
     .product-card-wrapper {
