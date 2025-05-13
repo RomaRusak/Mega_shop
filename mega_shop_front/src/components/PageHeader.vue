@@ -14,7 +14,7 @@
                     <router-link 
                     :to="link.href"
                     :class="{ 
-                        active: isActive(link.href),
+                        active: isActive(link.name),
                         'nav-link': true,
                     }"
                     >
@@ -33,15 +33,13 @@ import { useRoute } from 'vue-router';
     export default {
         setup() {
             const navLinks = ref([
-                {text: 'Home', href: '/'},
-                {text: 'Products', href: '/products'},
+                {text: 'Home', href: '/', name: 'home'},
+                {text: 'Products', href: '/products', name: 'products'},
             ]);
 
             const route = useRoute();
 
-            const isActive = (href) => {
-                return route.path === href;
-            };
+            const isActive = (name) => route.name === name;
 
             return {
                 headerLogo,

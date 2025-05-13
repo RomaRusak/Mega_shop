@@ -11,3 +11,7 @@ Route::get('/', function () {
 Route::get('/products/{categorySlug?}', function () {
     return view('app');
 });
+
+Route::get('/products/{categorySlug?}/{productSlug}', function () {
+    return view('app');
+})->where('productSlug', '^[a-zA-Z0-9-_]+-\d+$');

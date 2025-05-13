@@ -1,24 +1,28 @@
 <template>
-    <div class="product-card-wrapper">
+    <div 
+    class="product-card-wrapper" 
+    @click="navigateToProductPage(getProductSlug(productId))"
+    >
         <img 
-        :src="require(`@/assets/${productCardMainImage(productId)}`)"
+        :src="require(`@/assets/${getProductCardMainImage(productId)}`)"
         class="product-card-img"
         >
         <footer class="product-card__footer">
             <div class="product-card__description">
                 <h2 
-                @click="toggleIsCutName"
+                @mouseenter="toggleIsCutName"
+                @mouseleave="toggleIsCutName"
                 :class="{
                     'product-card__name': true,
                     'cut-name': isCutProductName,
                 }"
                 >
-                    {{ productName(productId) }}
+                    {{ getProductName(productId) }}
                 </h2>
-                <p class="product-card__brand">{{ productBrand(productId) }}</p>
+                <p class="product-card__brand">{{ getProductBrand(productId) }}</p>
             </div>
             <div class="product-card__price">
-                {{ minProductPrice(productId) }}$ - {{ maxProductPrice(productId) }}$
+                {{ getMinProductPrice(productId) }}$ - {{ getMaxProductPrice(productId) }}$
             </div>
         </footer>
     </div>
@@ -28,6 +32,7 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
     export default {
         props: {
@@ -39,27 +44,38 @@ import { ref } from 'vue';
 
         setup() {
             const store = useStore();
+            const router = useRouter();
+            const route = useRoute();
+
             let isCutProductName = ref(true);
             
             // computeds
-            const productName = computed(() => store.getters.getProductName);
-            const productBrand = computed(() => store.getters.getProductBrand);
-            const minProductPrice = computed(() => store.getters.getMinProductPrice);
-            const maxProductPrice = computed(() => store.getters.getMaxProductPrice);
-            const productCardMainImage = computed(() => store.getters.getProductCardMainImage);
+            const getProductName = computed(() => store.getters.getProductName);
+            const getProductBrand = computed(() => store.getters.getProductBrand);
+            const getMinProductPrice = computed(() => store.getters.getMinProductPrice);
+            const getMaxProductPrice = computed(() => store.getters.getMaxProductPrice);
+            const getProductCardMainImage = computed(() => store.getters.getProductCardMainImage);
+            const getProductSlug = computed(() => store.getters.getProductSlug)
 
             const toggleIsCutName = () => {
                 isCutProductName.value = !isCutProductName.value;
             }
 
+            const navigateToProductPage = (slug) => {
+                const {categorySlug} = route.params;
+                router.push({ name: 'product', params: { categorySlug, productSlug: slug}});
+            }
+
             return {
-                productName,
-                productBrand,
-                minProductPrice,
-                maxProductPrice,
-                productCardMainImage,
+                getProductName,
+                getProductBrand,
+                getMinProductPrice,
+                getMaxProductPrice,
+                getProductCardMainImage,
                 isCutProductName,
+                getProductSlug,
                 toggleIsCutName,
+                navigateToProductPage,
             };
         }
     };
