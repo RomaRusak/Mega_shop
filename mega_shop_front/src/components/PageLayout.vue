@@ -1,6 +1,6 @@
 <template>
+    <page-header />
     <div class="container">
-        <page-header />
         <router-view /> 
     </div>
 </template>
@@ -61,5 +61,6 @@ import PageHeader from './PageHeader.vue';
         max-width: 1200px;
         overflow: hidden;
         margin: 0 auto;
+        margin-top: 125px;
     }
 </style>

@@ -4,7 +4,7 @@
         <div>
             <products-preloader  v-if="getProductsIsLoading"/>
             <div v-else>
-                <div class="product-card-wrapper">
+                <div class="products-card-wrapper">
                     <product-card 
                     v-for="(productId) in getProductIds"
                     :key="productId"
@@ -91,10 +91,10 @@ export default {
         grid-column-gap: 50px;
     }
 
-    .product-card-wrapper {
+    .products-card-wrapper {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 400px);
+        grid-template-columns: repeat(auto-fill, 260px);
         justify-content: space-between;
-        grid-gap: 15px;
+        grid-row-gap: 40px;
     }
 </style>

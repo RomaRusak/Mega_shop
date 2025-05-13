@@ -142,6 +142,7 @@ export default {
           return (id) => {
             const product = getters.getProductById(id);
             const gallery = product.product_variants[0].gallery.image_paths;
+            console.log(product)
             const {image} = gallery.find(imgData => imgData.isMainImage);
             return image;
           }
