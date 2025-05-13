@@ -1,5 +1,6 @@
 <template>
     <div class="products-wrapper">
+        <page-preloader v-if="isShowPagePreloader"/>
         <filter-sidebar />
         <div>
             <products-preloader  v-if="getProductsIsLoading"/>
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+import { ref } from 'vue';
 import { onMounted, onBeforeUnmount, computed } from 'vue';
 import { useStore } from 'vuex';
 import FilterSidebar from './FilterSidebar.vue';
@@ -25,6 +27,7 @@ import ProductCard from './ProductCard.vue';
 import PaginationControls from './PaginationControls.vue';
 import ProductsPreloader from './UI/ProductsPreloader.vue';
 import { useProductsFilterParamsHanlde } from '@/compossables/useProductsFilterParamsHanlde';
+import PagePreloader from './UI/PagePreloader.vue';
 
 export default {
   components: {
@@ -32,10 +35,12 @@ export default {
     'product-card': ProductCard,
     'pagination-controls': PaginationControls,
     'products-preloader': ProductsPreloader,
+    'page-preloader': PagePreloader,
   },
 
   setup() {
     const store = useStore();
+    let isShowPagePreloader = ref(false);
     
     //compossible
     useProductsFilterParamsHanlde();
@@ -64,9 +69,15 @@ export default {
      //lifeHooks
     onMounted(async () => {
         try {
+            isShowPagePreloader.value = true;
             await Promise.all([asyncFetchProductsData(), asyncFetchUniqFilterValues()]);
+
+            setTimeout(() => {
+                isShowPagePreloader.value = false;
+            }, 700)
         } catch (error) {
             console.error(error);
+            isShowPagePreloader.value = false;
         }
     });
 
@@ -78,6 +89,7 @@ export default {
     return {
         getProductIds,
         getProductsIsLoading,
+        isShowPagePreloader,
     };
   },
 };
