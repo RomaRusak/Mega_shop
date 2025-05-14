@@ -35,10 +35,9 @@ class ProductsController extends Controller
     public function index(ProductsIndexRequest $request): ProductsListResource|JsonResponse
     {
         $categorySlug = $request->categorySlug;
-
         if (isset($categorySlug)) {
             $validator = $this->productsValidationService->validate(['categorySlug' => $categorySlug]);
-
+            
             if ($validator->fails()) {
                 return response()->json([
                     'errors' => $validator->errors(),
@@ -57,7 +56,6 @@ class ProductsController extends Controller
         $transformedFiltProducts = $this->productsService->filterByPrice(
             $transformedFiltProducts, ['min_price' => $request->min_price, 'max_price' => $request->max_price]
         );
-        
         return new ProductsListResource([
             'page'                  => $request->page,
             'products_per_page'     => $request->products_per_page,

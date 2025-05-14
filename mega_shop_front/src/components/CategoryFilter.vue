@@ -1,12 +1,14 @@
 <template>
     <div>
-        <p>Categories</p>
-        <ul>
+        <ul class="categories-list">
             <li 
             v-for="category in getFilters('categories')" 
             :key="category.id"
             @click="categoryClickHandler(category)"
-            :class="{ 'selected': category.isSelected }"
+            :class="{
+                'selected': category.isSelected,
+                'categories-list__li': true
+            }"
             >
                 <p>{{ category.name }}</p>
             </li>
@@ -54,7 +56,18 @@ import { useGetFilters } from '@/compossables/useGetFilters';
 </script>
 
 <style scoped>
+    .categories-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-size: 16px;
+    }
+
+    .categories-list__li {
+        cursor: pointer;
+    }
+
     .selected {
-        background-color: orange;
+       font-weight: bold;
     }
 </style>

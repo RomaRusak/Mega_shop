@@ -47,7 +47,7 @@ class Product extends Model
         $brandSlug           = $preparedRequestParams['brand'];
 
         $query = $this->withProductRelations(
-            $this::select('id', 'name', 'brand_id', 'category_id', 'rating')
+            $this::select('id', 'name', 'slug', 'brand_id', 'category_id', 'rating')
         );
 
         if (!empty($categorySlug)) {

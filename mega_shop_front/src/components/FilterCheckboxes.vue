@@ -1,7 +1,6 @@
 <template>
     <div>
-        <p>{{title}}</p>
-        <ul style="display: flex; flex-direction: column; gap: 5px;">
+        <ul class="checkboxes-list">
             <li
             v-for="filt in getFilters(filterKey)"
             :key="filt.id"
@@ -61,3 +60,12 @@ import { useGetFilters } from '@/compossables/useGetFilters';
         }
     }
 </script>
+
+<style scoped>
+    .checkboxes-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        font-size: 16px;
+    }
+</style>

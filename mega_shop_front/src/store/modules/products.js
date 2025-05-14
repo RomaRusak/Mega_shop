@@ -1,5 +1,6 @@
 import ProductsRequestService from "@/services/ProductsRequestService";
 import axios from "axios";
+import ProductsTransformedService from "@/services/ProductsTransformedService";
 
 export default {
     state() {
@@ -53,8 +54,9 @@ export default {
 
                 if (responce.status === 200) {
                   const {products, pagination} = responce.data.data;
+                  const transformedProducts = ProductsTransformedService.prepareProductsData(products);
 
-                  commit('SET_PRODUCTS_DATA', {products, pagination});
+                  commit('SET_PRODUCTS_DATA', {products: transformedProducts, pagination});
                 }
 
                 commit('SET_IS_LOADING_STATUS', {loadingStatus: false});
@@ -127,7 +129,6 @@ export default {
 
         getPaginationDataByKey(state) {
           return (key) => {
-            // console.log(state.productsData.pagination);
             return state.productsData.pagination[key];
           }
         },
@@ -135,5 +136,21 @@ export default {
         getProductsIsLoading(state) {
           return state.productsData.isLoading;
         },
+
+        getProductCardMainImage(state, getters) {
+          return (id) => {
+            const product = getters.getProductById(id);
+            const gallery = product.product_variants[0].gallery.image_paths;
+            const {image} = gallery.find(imgData => imgData.isMainImage);
+            return image;
+          }
+        },
+
+        getProductSlug(state, getters) {
+          return (id) => {
+            const product = getters.getProductById(id);
+            return product.slug;
+          }
+        }
       }
 };

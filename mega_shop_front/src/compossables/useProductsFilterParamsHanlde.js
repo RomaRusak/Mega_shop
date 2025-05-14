@@ -41,6 +41,9 @@ export function useProductsFilterParamsHanlde() {
 
     function changeFilterParamsHandler() {
         const stateFilters = getAllFilters.value;
+        
+        if (!Object.values(stateFilters).length) return;
+
         const selectedBrands = getSelectedFilters(stateFilters.brands, 'isChecked', 'slug');
         const selectedColors = getSelectedFilters(stateFilters.colors, 'isChecked', 'name');
         const selectedSizes = getSelectedFilters(stateFilters.sizes, 'isChecked', 'name');
