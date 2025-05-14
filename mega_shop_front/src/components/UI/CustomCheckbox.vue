@@ -1,13 +1,12 @@
 <template>
     <div 
     :class="isChecked ? 'checked checkbox' : 'checkbox'"
-    @click="hanldeCheckboxChange({key: filterKey, id: id})"
+    @click="$emit('checkboxChange')"
     >
     </div>
 </template>
 
 <script>
-import { useStore } from 'vuex';
 
     export default {
         props: {
@@ -15,27 +14,8 @@ import { useStore } from 'vuex';
                 type: Boolean,
                 required: true,
             },
-            filterKey: {
-                type: String,
-                required: true,
-            },
-            id: {
-                type: Number,
-                required: true,
-            },
         },
-        setup() {
-            const store = useStore();
-
-            //methods
-            function hanldeCheckboxChange(payload) {
-                store.commit('HANDLE_CHECKBOX_CHANGE', payload);
-            }
-
-            return {
-                hanldeCheckboxChange,
-            };
-        }
+        emits: ['checkboxChange'],
     }
 </script>
 

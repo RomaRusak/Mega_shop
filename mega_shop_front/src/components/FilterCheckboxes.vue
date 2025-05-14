@@ -15,8 +15,7 @@
                 >
                 <custom-checkbox 
                 :isChecked="filt.isChecked"
-                :filterKey = "filterKey"
-                :id="filt.id"
+                @checkboxChange="handleCheckboxChange({key: filterKey, id: filt.id})"
                 />
                 <label :for="filt.name">{{ filt.name }}</label>
             </div>
@@ -50,6 +49,7 @@ import { useGetFilters } from '@/compossables/useGetFilters';
 
             //methods
             function handleCheckboxChange(payload) {
+                console.log(payload);
                 store.commit('HANDLE_CHECKBOX_CHANGE', payload);
             }
 
