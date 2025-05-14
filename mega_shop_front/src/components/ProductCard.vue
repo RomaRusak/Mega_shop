@@ -9,6 +9,9 @@
         >
         <footer class="product-card__footer">
             <div class="product-card__description">
+                <product-rating 
+                :rating="getProductRating(productId)"
+                />
                 <h2 
                 @mouseenter="toggleIsCutName"
                 @mouseleave="toggleIsCutName"
@@ -33,6 +36,7 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import ProductRating from './UI/ProductRating.vue';
 
     export default {
         props: {
@@ -40,6 +44,10 @@ import { useRouter, useRoute } from 'vue-router';
                 type: Number,
                 required: true
             }
+        },
+
+        components: {
+            'product-rating': ProductRating,
         },
 
         setup() {
@@ -55,7 +63,8 @@ import { useRouter, useRoute } from 'vue-router';
             const getMinProductPrice = computed(() => store.getters.getMinProductPrice);
             const getMaxProductPrice = computed(() => store.getters.getMaxProductPrice);
             const getProductCardMainImage = computed(() => store.getters.getProductCardMainImage);
-            const getProductSlug = computed(() => store.getters.getProductSlug)
+            const getProductSlug = computed(() => store.getters.getProductSlug);
+            const getProductRating = computed(() => store.getters.getProductRating);
 
             const toggleIsCutName = () => {
                 isCutProductName.value = !isCutProductName.value;
@@ -72,6 +81,7 @@ import { useRouter, useRoute } from 'vue-router';
                 getMinProductPrice,
                 getMaxProductPrice,
                 getProductCardMainImage,
+                getProductRating,
                 isCutProductName,
                 getProductSlug,
                 toggleIsCutName,

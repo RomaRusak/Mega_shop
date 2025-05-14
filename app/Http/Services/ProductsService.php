@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use App\Http\Repositories\ProductVariantRepository;
+use App\Models\Product;
 
 class ProductsService {
 
@@ -16,8 +17,10 @@ class ProductsService {
         $this->productVariantRepository = $productVariantRepository;
     }
 
-    public function transformProducts(Collection $products): Collection
+    public function transformProducts(Collection|Product $products): Collection|Product
     {
+        $products = $products instanceof Collection ? $products : collect([$products]);
+
         $transformedProducts = $products->map(function ($product) {
             $product->product_variants = $product->productVariants->map(function($variant) {
                 $productPrice = (float) $variant->price;
@@ -40,7 +43,7 @@ class ProductsService {
             return $product;
         });
         
-        return $transformedProducts;
+        return $products instanceof Collection ? $transformedProducts : $transformedProducts->first();
     }
 
     public function filterByPrice(Collection $products, array $filterParams)
