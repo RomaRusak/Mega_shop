@@ -1,7 +1,7 @@
 <template>
     <div 
     :class="isChecked ? 'checked checkbox' : 'checkbox'"
-    @click="$emit('checkboxChange')"
+    @click="handleClick"
     >
     </div>
 </template>
@@ -14,8 +14,24 @@
                 type: Boolean,
                 required: true,
             },
+            isDisabled: {
+                type: Boolean,
+                default: false,
+            }
         },
         emits: ['checkboxChange'],
+
+        setup(props, {emit}) {
+            const handleClick = () => {
+                if (!props.isDisabled) {
+                    emit('checkboxChange');
+                }
+            }
+            
+            return {
+                handleClick,
+            }
+        }
     }
 </script>
 

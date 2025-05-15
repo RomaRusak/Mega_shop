@@ -5,16 +5,23 @@
         v-for="(checkboxData, idx) in checkboxes"
         :key="idx"
         >
-        <div style="display: flex; align-items: center; gap: 10px;">
+        <div
+        :class="{
+            'checkbox-wrapper': true,
+            'disabled': checkboxData.isDisabled
+        }"
+        >
             <input 
             style="display: none;"
             type="checkbox" 
             :id="checkboxData.value"
             :checked="checkboxData.isChecked" 
+            :disabled="checkboxData.isDisabled"
             @click.prevent="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey, checkedStatus: checkboxData.isChecked})"
             >
             <custom-checkbox 
             :isChecked="checkboxData.isChecked"
+            :isDisabled="checkboxData.isDisabled"
             @checkboxChange="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey, checkedStatus: checkboxData.isChecked})"
             />
             <label 
@@ -58,3 +65,17 @@ import CustomCheckbox from './UI/CustomCheckbox.vue';
         }
     }
 </script>
+
+<style scoped>
+    .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+
+    .disabled {
+        opacity: 0.5; 
+        cursor: not-allowed; 
+    }
+</style>

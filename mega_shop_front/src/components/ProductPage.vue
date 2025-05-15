@@ -62,11 +62,23 @@ import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
         }
       }
 
+      function getIsDiabledStatus(selectedProdVarColor, key, value) {
+        if (key === 'color') {
+          return false;
+        }
+
+        const filteredProductVariantsByColor = productVariants.value.filter(({color}) => color === selectedProdVarColor); 
+
+        return !filteredProductVariantsByColor.some(({size}) => size === value);
+      }
+      
       function getUniqCheckboxValues(key) {
+
         const transformedData = productVariants.value.map((item) => (
           {
             value: item[key],
             isChecked: item[key] === selectedProductVariant.value[key],
+            isDisabled: getIsDiabledStatus(selectedProductVariant.value.color, key, item[key]),
           }
         ));
 
@@ -96,22 +108,36 @@ import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
           });
         };
 
+        const getSelectedCheckboxVal = (data) => {
+
+          const selectedCheckbox = data.find(({isChecked}) => isChecked);
+          if (!selectedCheckbox) {
+            return null;
+          }
+
+          return selectedCheckbox.value
+        };
+
         if (filtersKey === 'uniqColors') {
           uniqColors.value = updateCheckboxes(uniqColors.value);
 
-          if (checkedStatus) {
-            selectedProductVariant.value = {};
-            return;
-          }
-          
-          selectedProductVariant.value = productVariants.value.find(({color}) => color === selectedValue);
-          console.log(getUniqCheckboxValues('size'));
-          //при изменении цвета размеры сбрасываются и дизейблятся те, у которых не подходиящего цвета
+          uniqSizes.value = uniqSizes.value.map(checkboxData => (
+            {
+              ...checkboxData, 
+              isChecked: false,
+              isDisabled: getIsDiabledStatus(selectedValue, 'size', checkboxData.value)
+            }
+          ));
         }
 
         if (filtersKey === 'uniqSizes') {
           uniqSizes.value = updateCheckboxes(uniqSizes.value);
         }
+
+        const selectedColor = getSelectedCheckboxVal(uniqColors.value);
+        const selectedSize  = getSelectedCheckboxVal(uniqSizes.value);
+
+        console.log(selectedColor, selectedSize, productVariants);
       }
 
       onMounted(async () => {
@@ -121,8 +147,8 @@ import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
         if (responce.status === 200) {
           productVariants.value = responce.data.data.product_variants; 
           selectedProductVariant.value = productVariants.value[0]
-          uniqSizes.value = getUniqCheckboxValues('size');
           uniqColors.value = getUniqCheckboxValues('color');
+          uniqSizes.value = getUniqCheckboxValues('size');
         }
       });
 
