@@ -71,6 +71,19 @@ import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
 
         return !filteredProductVariantsByColor.some(({size}) => size === value);
       }
+
+      function findSelectedProductVariant(selectedValues) {
+        if (Object.values(selectedValues).some(selectedVal => !selectedVal)) {
+          return {};
+        }
+
+        const {selectedColor, selectedSize} = selectedValues;
+        const selectedProductVariant = productVariants.value.find(({size, color}) => (
+          size === selectedSize && color === selectedColor
+        ));
+
+        return selectedProductVariant ?? {};
+      }
       
       function getUniqCheckboxValues(key) {
 
@@ -137,7 +150,7 @@ import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
         const selectedColor = getSelectedCheckboxVal(uniqColors.value);
         const selectedSize  = getSelectedCheckboxVal(uniqSizes.value);
 
-        console.log(selectedColor, selectedSize, productVariants);
+        selectedProductVariant.value = findSelectedProductVariant({selectedColor, selectedSize});
       }
 
       onMounted(async () => {
