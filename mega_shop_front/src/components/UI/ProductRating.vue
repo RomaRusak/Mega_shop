@@ -1,6 +1,6 @@
 <template>
     <div 
-    :style="{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: `${starSize}px` }"
+    :style="{ display: 'flex', alignItems: 'center', minHeight: `${starSize}px` }"
     >
         <rating-star-image 
         v-for="({isFullStar}, idx) in ratingDataArr"

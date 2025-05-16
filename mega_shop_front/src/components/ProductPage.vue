@@ -5,19 +5,31 @@
     :prodVarGallery="prodVarGallery"
     @changeMainImage="handleChangeMainImage"
     />
-    <div>
-      <prod-var-filter-checkboxes 
-      :checkboxes = "uniqColors"
-      filtersKey = 'uniqColors'
-      title="Color"
-      @checkboxChange="handleCheckboxChange"
+    <div class="product-variant-info">
+      <product-description 
+      :productDescriptionData="productDescriptionData"
       />
-      <prod-var-filter-checkboxes 
-      :checkboxes = "uniqSizes"
-      filtersKey = 'uniqSizes'
-       title="Size"
-      @checkboxChange="handleCheckboxChange"
-      />
+      <div 
+      class="product-variant-info__filters-container"
+      >
+        <prod-var-filter-checkboxes 
+        :checkboxes = "uniqColors"
+        filtersKey = 'uniqColors'
+        title="Colours available"
+        @checkboxChange="handleCheckboxChange"
+        />
+        <prod-var-filter-checkboxes 
+        :checkboxes = "uniqSizes"
+        filtersKey = 'uniqSizes'
+        title="Select size"
+        @checkboxChange="handleCheckboxChange"
+        />
+      </div>
+      <div class="product-variant-info__buy_block">
+        <price-tag 
+        :selectedProdVarPriceData="selectedProdVarPriceData"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -29,12 +41,16 @@ import PagePreloader from './UI/PagePreloader.vue';
 import { ref, watch } from 'vue';
 import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
 import ProductVariantGallery from './ProductVariantGallery.vue';
+import ProductDescription from './ProductDescription.vue';
+import PriceTag from './UI/PriceTag.vue';
 
   export default {
     components: {
       'page-preloader': PagePreloader,
       'prod-var-filter-checkboxes': ProdVarFilterCheckboxes,
       'product-variant-gallery': ProductVariantGallery,
+      'product-description': ProductDescription,
+      'price-tag': PriceTag,
     },
 
     setup() {
@@ -45,12 +61,27 @@ import ProductVariantGallery from './ProductVariantGallery.vue';
       const uniqColors = ref([]);
       const selectedProductVariant = ref({});
       const prodVarGallery = ref({image_paths: []});
+      const productDescriptionData = ref({name: '', rating: 0});
+      const selectedProdVarPriceData = ref({price: 0, priceWithDiscount: 0});
 
       //watchers
       watch(selectedProductVariant, (selectedProdVarState) => {
-        const gallery = selectedProdVarState.gallery;
-        const preparedImagePaths = JSON.parse(gallery.image_paths).map(imgData => ({...imgData, isShownAsMainImage: imgData.isMainImage}));
-        prodVarGallery.value = {...gallery, image_paths: preparedImagePaths};
+        const { gallery, price, price_with_discount } = selectedProdVarState;
+        const preparedImagePaths = JSON.parse(gallery.image_paths)?.map(imgData => ({
+          ...imgData, 
+          isShownAsMainImage: imgData.isMainImage
+        })) || [];
+
+        prodVarGallery.value = {
+          ...gallery, 
+          image_paths: preparedImagePaths
+        };
+
+        selectedProdVarPriceData.value = {
+          ...selectedProdVarPriceData.value, 
+          price: +price, 
+          priceWithDiscount: +price_with_discount,
+        };
       });
 
       //methods
@@ -187,7 +218,17 @@ import ProductVariantGallery from './ProductVariantGallery.vue';
         const responce = await asyncFetchProductData(request);
         
         if (responce.status === 200) {
-          productVariants.value = responce.data.data.product_variants; 
+          const respData = responce.data.data;
+          console.log(respData);
+          
+          productDescriptionData.value = {
+            ...productDescriptionData.value,
+            name: respData.name,
+            rating: +respData.rating,
+          }
+          
+          productVariants.value = respData.product_variants; 
+
           selectedProductVariant.value = productVariants.value[0]
           uniqColors.value = getUniqCheckboxValues('color');
           uniqSizes.value = getUniqCheckboxValues('size');
@@ -203,6 +244,8 @@ import ProductVariantGallery from './ProductVariantGallery.vue';
         selectedProductVariant,
         prodVarGallery,
         handleChangeMainImage,
+        productDescriptionData,
+        selectedProdVarPriceData,
       }
     }
   }
@@ -213,5 +256,25 @@ import ProductVariantGallery from './ProductVariantGallery.vue';
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: 75px;
+  }
+
+  .product-variant-info {
+    padding: 30px 0;
+    color: #3C4242;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .product-variant-info__filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .product-variant-info__buy_block {
+    display: flex;
+    justify-content: space-between;
   }
 </style>

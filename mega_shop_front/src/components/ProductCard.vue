@@ -9,9 +9,11 @@
         >
         <footer class="product-card__footer">
             <div class="product-card__description">
-                <product-rating 
-                :rating="getProductRating(productId)"
-                />
+                <div class="product-card__rating-wrapper">
+                    <product-rating 
+                    :rating="getProductRating(productId)"
+                    />
+                </div>
                 <h2 
                 @mouseenter="toggleIsCutName"
                 @mouseleave="toggleIsCutName"
@@ -150,5 +152,10 @@ import ProductRating from './UI/ProductRating.vue';
         font-weight: 700;
         background-color: #F6F6F6;
         border-radius: 8px;
+    }
+
+    .product-card__rating-wrapper {
+        display: flex;
+        justify-content: center;
     }
 </style>
