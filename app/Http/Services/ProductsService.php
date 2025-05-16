@@ -56,9 +56,9 @@ class ProductsService {
                 return $variant['price_with_discount'];
             }, $product->product_variants->toArray()); 
 
-            $maxProdVarPrice = max($prodVarPricesArr);
-            $minProdVarPrice = min($prodVarPricesArr);
-
+            $maxProdVarPrice = !empty($prodVarPricesArr) ? max($prodVarPricesArr) : 0;
+            $minProdVarPrice = !empty($prodVarPricesArr) ? min($prodVarPricesArr) : 0;
+            
             return $maxProdVarPrice <= $maxPrice && $minProdVarPrice >= $minPrice;
         });
 

@@ -90,7 +90,7 @@ class DatabaseSeeder extends Seeder
         $this->categoryModel::factory($this->factoryParams['category'])->create();
         $this->productModel::factory($this->factoryParams['product'])->create();
         $this->galleryModel::factory($this->factoryParams['gallery'])->create();
-        $this->productVariantModel::factory($this->factoryParams['productVariant'])->create();
+        $this->generateUniqProductVariants();
         $this->discountModel::factory($this->factoryParams['discount'])->create();
         $this->discountProductVariantModel::factory($this->factoryParams['discountProductVariant'])->create();
         $this->userModel::factory($this->factoryParams['user'])->create();
@@ -135,6 +135,28 @@ class DatabaseSeeder extends Seeder
         foreach($usedUserIds as $id) {
             $addressFactory = $this->getFactoryWithUserId($this->addressModel, $id);
             $addressFactory->create();
+        }
+    }
+
+    private function generateUniqProductVariants() {
+        for ($i = 0; $i < $this->factoryParams['productVariant']; $i++) {
+            while(true) {
+                $productVariant = $this->productVariantModel::factory()->make();
+    
+                $product_id = $productVariant->product_id;
+                $size       = $productVariant->size;
+                $color      = $productVariant->color;
+
+                $existingProductVariant = $this->productVariantModel::where('product_id', $product_id)
+                ->where('size', $size)
+                ->where('color', $color)
+                ->first();
+
+                if (!$existingProductVariant) {
+                    $productVariant->save();
+                    break;
+                }
+            }
         }
     }
 

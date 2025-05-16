@@ -219,7 +219,6 @@ import PriceTag from './UI/PriceTag.vue';
         
         if (responce.status === 200) {
           const respData = responce.data.data;
-          console.log(respData);
           
           productDescriptionData.value = {
             ...productDescriptionData.value,

@@ -49,7 +49,6 @@ import { useGetFilters } from '@/compossables/useGetFilters';
 
             //methods
             function handleCheckboxChange(payload) {
-                console.log(payload);
                 store.commit('HANDLE_CHECKBOX_CHANGE', payload);
             }
 

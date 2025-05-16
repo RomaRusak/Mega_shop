@@ -19,19 +19,12 @@ class ProductVariantFactory extends Factory
      */
     public function definition()
     {
-        while (true) {
-            $product_id = Product::get()->random()->id;
-            $gallery_id = Gallery::get()->random()->id;
-            $size = $this->faker->randomElement(['s_size', 'm_size', 'l_size', 'xl_size']);
-            $color = $this->faker->randomElement(['red', 'green', 'blue']);
-            
-            $existingProductVariant = ProductVariant::where('product_id', $product_id)
-                ->where('size', $size)
-                ->where('color', $color)
-                ->first();
-            
-            if (!$existingProductVariant) {
-                return [
+        $product_id = Product::get()->random()->id;
+        $gallery_id = Gallery::get()->random()->id;
+        $size = $this->faker->randomElement(['s_size', 'm_size', 'l_size', 'xl_size']);
+        $color = $this->faker->randomElement(['red', 'green', 'blue']);
+
+        return  [
                     'product_id' => $product_id,
                     'gallery_id' => $gallery_id,
                     'size' => $size,
@@ -39,7 +32,5 @@ class ProductVariantFactory extends Factory
                     'quantity' => $this->faker->randomNumber(2, true),
                     'price' => $this->faker->randomFloat(2, 10, 300),
                 ];
-            }
-        }
     }
 }
