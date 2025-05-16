@@ -17,12 +17,12 @@
             :id="checkboxData.value"
             :checked="checkboxData.isChecked" 
             :disabled="checkboxData.isDisabled"
-            @click.prevent="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey, checkedStatus: checkboxData.isChecked})"
+            @click.prevent="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey,})"
             >
             <custom-checkbox 
             :isChecked="checkboxData.isChecked"
             :isDisabled="checkboxData.isDisabled"
-            @checkboxChange="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey, checkedStatus: checkboxData.isChecked})"
+            @checkboxChange="$emit('checkboxChange', {selectedValue: checkboxData.value, filtersKey,})"
             />
             <label 
             :for="checkboxData.value"
