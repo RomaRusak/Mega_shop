@@ -23,6 +23,7 @@ class ReviewFactory extends Factory
             'user_id'     => User::get()->random()->id, 
             'review_text' => $this->faker->paragraph(), 
             'rating'      => rand(1, 10),
+            'review_date' => $this->faker->dateTimeBetween('-10 days', 'now')->format('Y-m-d H:i:s'),
         ];
     }
 }
