@@ -120,6 +120,7 @@ class Product extends Model
         ]);
     }
 
+    
     public function getProductById(string $id): Product
     {
         return $this->withProductRelations(
