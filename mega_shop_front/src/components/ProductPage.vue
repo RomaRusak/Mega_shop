@@ -6,8 +6,8 @@
     @changeMainImage="handleChangeMainImage"
     />
     <div class="product-variant-info">
-      <product-description 
-      :productDescriptionData="productDescriptionData"
+      <product-info 
+      :productInfoData="productInfoData"
       />
       <div 
       class="product-variant-info__filters-container"
@@ -26,11 +26,15 @@
         />
       </div>
       <div class="product-variant-info__buy_block">
+        <add-to-cart-btn />
         <price-tag 
         :selectedProdVarPriceData="selectedProdVarPriceData"
         />
       </div>
     </div>
+    <product-description 
+    :productDescriptionData="productDescriptionData"
+    />
   </div>
 </template>
 <script>
@@ -41,16 +45,20 @@ import PagePreloader from './UI/PagePreloader.vue';
 import { ref, watch } from 'vue';
 import ProdVarFilterCheckboxes from './ProdVarFilterCheckboxes.vue';
 import ProductVariantGallery from './ProductVariantGallery.vue';
-import ProductDescription from './ProductDescription.vue';
+import ProductInfo from './ProductInfo.vue';
 import PriceTag from './UI/PriceTag.vue';
+import AddToCartBtn from './UI/AddToCartBtn.vue';
+import ProductDescription from './ProductDescription.vue';
 
   export default {
     components: {
       'page-preloader': PagePreloader,
       'prod-var-filter-checkboxes': ProdVarFilterCheckboxes,
       'product-variant-gallery': ProductVariantGallery,
-      'product-description': ProductDescription,
+      'product-info': ProductInfo,
       'price-tag': PriceTag,
+      'add-to-cart-btn': AddToCartBtn,
+      'product-description': ProductDescription,
     },
 
     setup() {
@@ -61,7 +69,8 @@ import PriceTag from './UI/PriceTag.vue';
       const uniqColors = ref([]);
       const selectedProductVariant = ref({});
       const prodVarGallery = ref({image_paths: []});
-      const productDescriptionData = ref({name: '', rating: 0});
+      const productInfoData = ref({name: '', rating: 0});
+      const productDescriptionData = ref({description: '', reviews: [],});
       const selectedProdVarPriceData = ref({price: 0, priceWithDiscount: 0});
 
       //watchers
@@ -219,11 +228,18 @@ import PriceTag from './UI/PriceTag.vue';
         
         if (responce.status === 200) {
           const respData = responce.data.data;
+          // console.log(respData?.reviews);
           
-          productDescriptionData.value = {
-            ...productDescriptionData.value,
+          productInfoData.value = {
+            ...productInfoData.value,
             name: respData.name,
             rating: +respData.rating,
+          }
+
+          productDescriptionData.value = {
+            ...productDescriptionData.value,
+            description: respData.description,
+            reviews: respData.reviews,
           }
           
           productVariants.value = respData.product_variants; 
@@ -243,8 +259,9 @@ import PriceTag from './UI/PriceTag.vue';
         selectedProductVariant,
         prodVarGallery,
         handleChangeMainImage,
-        productDescriptionData,
+        productInfoData,
         selectedProdVarPriceData,
+        productDescriptionData,
       }
     }
   }
@@ -254,7 +271,9 @@ import PriceTag from './UI/PriceTag.vue';
   .product-variant-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     grid-column-gap: 75px;
+    grid-row-gap: 100px;
   }
 
   .product-variant-info {
@@ -274,6 +293,7 @@ import PriceTag from './UI/PriceTag.vue';
 
   .product-variant-info__buy_block {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
   }
 </style>

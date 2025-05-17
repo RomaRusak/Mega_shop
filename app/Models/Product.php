@@ -123,7 +123,14 @@ class Product extends Model
     public function getProductById(string $id): Product
     {
         return $this->withProductRelations(
-            $this::select('id', 'name', 'brand_id', 'category_id', 'rating')
-        )->find($id);   
+            $this::select('id', 'name', 'description', 'brand_id', 'category_id', 'rating')
+        )
+        ->with(['reviews' => function($query) {
+            $query->select('id', 'product_id', 'user_id', 'review_text', 'rating', 'created_at', 'review_date')
+                  ->with(['user' => function($query) {
+                        $query->select('id', 'name',);
+                  }]);
+        }])
+        ->find($id);   
     }
 }
