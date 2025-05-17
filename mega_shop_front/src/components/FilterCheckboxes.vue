@@ -15,8 +15,7 @@
                 >
                 <custom-checkbox 
                 :isChecked="filt.isChecked"
-                :filterKey = "filterKey"
-                :id="filt.id"
+                @checkboxChange="handleCheckboxChange({key: filterKey, id: filt.id})"
                 />
                 <label :for="filt.name">{{ filt.name }}</label>
             </div>

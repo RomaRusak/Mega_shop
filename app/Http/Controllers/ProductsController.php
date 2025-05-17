@@ -83,8 +83,10 @@ class ProductsController extends Controller
         }
 
         $productId = $this->generalHelper::getIdFromSlug($productSlug);
+        $productData = $this->productModel->getProductById($productId);
+        $transformedProductData= $this->productsService->transformProducts($productData);
 
-        return new ProductResource($this->productModel->getProductById($productId));
+        return new ProductResource($transformedProductData);
     }
     
 }

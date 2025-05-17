@@ -101,7 +101,7 @@ export default {
 
         getProductRating(state, getters) {
           return (id) => {
-            return getters.getProductById(id).rating;
+            return +getters.getProductById(id).rating;
           }
         },
 
@@ -137,7 +137,7 @@ export default {
           return state.productsData.isLoading;
         },
 
-        getProductCardMainImage(state, getters) {
+        getProductCardMainImage(_, getters) {
           return (id) => {
             const product = getters.getProductById(id);
             const gallery = product.product_variants[0].gallery.image_paths;
@@ -146,11 +146,11 @@ export default {
           }
         },
 
-        getProductSlug(state, getters) {
+        getProductSlug(_, getters) {
           return (id) => {
             const product = getters.getProductById(id);
             return product.slug;
           }
-        }
+        },
       }
 };

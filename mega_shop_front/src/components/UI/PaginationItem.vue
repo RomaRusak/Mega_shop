@@ -36,11 +36,11 @@ import { computed } from 'vue';
 <style scoped>
     .page-number-wrapper {
         padding: 10px;
-        border: 1px solid black;
+        box-shadow: 2px 2px 4px black;
         cursor: pointer;
     }
 
     .page-number-wrapper.selected-page {
-        background-color: green;
+        background-color: #ddd;
     }
 </style>
